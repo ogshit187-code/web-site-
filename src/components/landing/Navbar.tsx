@@ -6,6 +6,7 @@ import { Menu } from "lucide-react";
 const NAV_ITEMS = [
   { href: "#about", label: "О нас" },
   { href: "#services", label: "Услуги и цены" },
+  { href: "#calculator", label: "Калькулятор" },
   { href: "#process", label: "Как мы работаем" },
   { href: "#portfolio", label: "Портфолио" },
   { href: "#reviews", label: "Отзывы" },

@@ -26,8 +26,8 @@ export default function Hero() {
               От идеи до готового изделия — всего за 1–3 дня. Онлайн‑заказы, курьерская доставка, СДЭК, Почта России и самовывоз.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#order">
-                <Button variant="hero" className="h-11 px-7">Заказать</Button>
+              <a href="#calculator">
+                <Button variant="hero" className="h-11 px-7">Рассчитать стоимость</Button>
               </a>
               <a href="#portfolio">
                 <Button variant="outline" className="h-11 px-7">Портфолио</Button>
