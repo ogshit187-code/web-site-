@@ -21,40 +21,37 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "fixed top-0 z-50 w-full border-b border-black/5 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/90"
+      "fixed top-0 z-50 w-full border-b border-black/10 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/95"
     )}>
-      <nav className="container mx-auto flex h-24 items-center justify-between px-8">
-        <div className="flex flex-col">
-          <a href="#top" className="atelier-title text-2xl text-black tracking-[0.02em]">
-            SMOLIN ATELIER
-          </a>
-          <span className="fashion-heading mt-0.5">
-            ПЕЧАТЬ DTF И МАШИННАЯ ВЫШИВКА В САНКТ-ПЕТЕРБУРГЕ — СРОК ИЗГОТОВЛЕНИЯ 1 ДЕНЬ
-          </span>
-        </div>
-        <div className="hidden lg:flex items-center gap-12">
+      <nav className="container mx-auto flex h-16 items-center justify-between px-8">
+        <a href="#top" className="text-xl font-light tracking-[0.1em] text-black">
+          SMOLIN ATELIER
+        </a>
+        
+        <div className="hidden lg:flex items-center gap-8">
           {NAV_ITEMS.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="fashion-heading text-black/70 hover:text-black transition-all duration-500 hover:tracking-[0.2em]"
+              className="text-sm uppercase tracking-[0.1em] text-black/70 hover:text-black transition-colors duration-300"
             >
               {item.label}
             </a>
           ))}
         </div>
-        <div className="flex items-center gap-6">
+        
+        <div className="flex items-center gap-4">
           <a href="#calculator">
-            <Button className="bg-black text-white hover:sand-bg hover:text-black px-12 h-14 rounded-none fashion-heading tracking-[0.1em] transition-all duration-500 shadow-micro hover:shadow-soft">
-              РАССЧИТАТЬ ЗАКАЗ
+            <Button className="bg-black text-white hover:bg-gray-800 px-6 h-10 rounded-none text-xs uppercase tracking-[0.1em] transition-colors duration-300">
+              КАЛЬКУЛЯТОР
             </Button>
           </a>
           <button 
             aria-label="Меню" 
-            className="text-black/60 hover:text-black transition-colors duration-300 p-3"
+            className="text-black/60 hover:text-black transition-colors duration-300 p-2"
             onClick={() => setIsSidebarOpen(true)}
           >
-            <Menu className="size-5" strokeWidth={1.5} />
+            <Menu className="size-5" strokeWidth={1} />
           </button>
         </div>
 
