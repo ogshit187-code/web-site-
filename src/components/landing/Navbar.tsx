@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Menu } from "lucide-react";
+import { Sidebar } from "@/components/ui/sidebar";
 
 const NAV_ITEMS = [
   { href: "#about", label: "О нас" },
@@ -15,6 +17,7 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const isMobile = useIsMobile();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <header className={cn(
@@ -39,15 +42,23 @@ export default function Navbar() {
           </ul>
         )}
         <div className="flex items-center gap-3">
-          <a href="#order">
-            <Button variant="hero" className="px-6 h-10">Заказать</Button>
+          <a href="#calculator">
+            <Button variant="hero" className="px-6 h-10">Рассчитать стоимость</Button>
           </a>
-          {isMobile && (
-            <button aria-label="Меню" className="md:hidden text-foreground/80">
-              <Menu className="size-5" />
-            </button>
-          )}
+          <button 
+            aria-label="Меню" 
+            className="text-foreground/80 hover:text-foreground transition-colors"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <Menu className="size-5" />
+          </button>
         </div>
+
+        {/* Sidebar */}
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          onClose={() => setIsSidebarOpen(false)} 
+        />
       </nav>
     </header>
   );
