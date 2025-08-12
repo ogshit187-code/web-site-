@@ -4,34 +4,47 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   return (
-    <section id="top" aria-label="Главный экран" className="relative">
-      <div className="relative isolate">
+    <section id="top" aria-label="Главный экран" className="relative min-h-screen">
+      <div className="relative isolate h-screen">
         <img
           src={heroImg}
           alt="DTF печать и машинная вышивка на одежде — примеры изделий"
-          className="w-full h-[60vh] md:h-[70vh] object-cover"
+          className="w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-background/10" />
-        <div className="absolute inset-0 pointer-events-none" />
-        <div className="container mx-auto absolute inset-x-0 bottom-0 pb-10 md:pb-16">
-          <div className="max-w-3xl">
-            <Badge className="mb-4 bg-secondary text-secondary-foreground">
-              Санкт‑Петербург • доставка по России
-            </Badge>
-            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
-              Печать и вышивка на одежде в Санкт‑Петербурге
-            </h1>
-            <p className="mt-4 text-base md:text-lg text-muted-foreground">
-              От идеи до готового изделия — всего за 1–3 дня. Онлайн‑заказы, курьерская доставка, СДЭК, Почта России и самовывоз.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#calculator">
-                <Button variant="hero" className="h-11 px-7">Рассчитать стоимость</Button>
-              </a>
-              <a href="#portfolio">
-                <Button variant="outline" className="h-11 px-7">Портфолио</Button>
-              </a>
+        <div className="absolute inset-0 bg-black/20" />
+        
+        <div className="absolute inset-0 flex items-center">
+          <div className="container mx-auto px-6">
+            <div className="max-w-2xl">
+              <div className="mb-6">
+                <span className="celine-heading text-white/90 tracking-[0.2em] text-xs">
+                  САНКТ‑ПЕТЕРБУРГ
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-light leading-[0.9] text-white mb-8 tracking-tight">
+                ПЕЧАТЬ И ВЫШИВКА<br />
+                НА ОДЕЖДЕ
+              </h1>
+              
+              <p className="text-lg md:text-xl text-white/90 mb-12 font-light leading-relaxed max-w-lg">
+                От идеи до готового изделия — всего за 1–3 дня. 
+                Профессиональное качество и индивидуальный подход.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a href="#calculator">
+                  <Button className="bg-white text-black hover:bg-gray-100 px-12 h-14 rounded-none celine-heading tracking-[0.1em] transition-colors duration-300">
+                    КАЛЬКУЛЯТОР
+                  </Button>
+                </a>
+                <a href="#portfolio">
+                  <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black px-12 h-14 rounded-none celine-heading tracking-[0.1em] transition-colors duration-300">
+                    ПОРТФОЛИО
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         </div>

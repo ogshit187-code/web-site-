@@ -21,19 +21,19 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      "sticky top-0 z-50 w-full border-b border-gray-200/20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/95"
     )}>
-      <nav className="container mx-auto flex h-16 items-center justify-between">
-        <a href="#top" className="font-extrabold tracking-tight text-lg">
-          DTF & Вышивка СПБ
+      <nav className="container mx-auto flex h-20 items-center justify-between px-6">
+        <a href="#top" className="celine-heading text-black tracking-[0.15em]">
+          PRINT STITCH STUDIO
         </a>
         {!isMobile && (
-          <ul className="hidden gap-6 md:flex">
+          <ul className="hidden gap-8 md:flex">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="celine-heading text-gray-700 hover:text-black transition-colors duration-300 tracking-[0.1em]"
                 >
                   {item.label}
                 </a>
@@ -41,16 +41,18 @@ export default function Navbar() {
             ))}
           </ul>
         )}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <a href="#calculator">
-            <Button variant="hero" className="px-6 h-10">Рассчитать стоимость</Button>
+            <Button className="bg-black text-white hover:bg-gray-800 px-8 h-12 rounded-none celine-heading tracking-[0.05em] transition-colors duration-300">
+              КАЛЬКУЛЯТОР
+            </Button>
           </a>
           <button 
             aria-label="Меню" 
-            className="text-foreground/80 hover:text-foreground transition-colors"
+            className="text-gray-700 hover:text-black transition-colors duration-300 p-2"
             onClick={() => setIsSidebarOpen(true)}
           >
-            <Menu className="size-5" />
+            <Menu className="size-6" strokeWidth={1} />
           </button>
         </div>
 
