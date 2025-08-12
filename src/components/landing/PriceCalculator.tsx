@@ -3,13 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calculator, Shirt, Brush, BadgeCheck, Plus, Minus } from "lucide-react";
+import { Calculator, Shirt, Brush, BadgeCheck, Plus, Minus, Upload, Image, X } from "lucide-react";
 
 interface CalculatorConfig {
   garmentType: string;
   serviceType: string;
   printSize: string;
   quantity: number;
+  uploadedImage?: File;
 }
 
 const garmentTypes = [
@@ -65,6 +66,7 @@ export default function PriceCalculator() {
   });
 
   const [showDetails, setShowDetails] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   const selectedGarment = garmentTypes.find(g => g.id === config.garmentType);
   const selectedService = serviceTypes.find(s => s.id === config.serviceType);
@@ -100,6 +102,51 @@ export default function PriceCalculator() {
 
   const totalPrice = calculatePrice();
   const isConfigComplete = config.garmentType && config.serviceType;
+
+  // Функции для загрузки файлов
+  const handleFileUpload = (files: FileList | null) => {
+    if (files && files[0]) {
+      const file = files[0];
+      
+      // Проверяем тип файла
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Пожалуйста, загрузите изображение (JPG, PNG, GIF, SVG)');
+        return;
+      }
+      
+      // Проверяем размер файла (максимум 10МБ)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Файл слишком большой. Максимальный размер: 10МБ');
+        return;
+      }
+      
+      setConfig({...config, uploadedImage: file});
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    handleFileUpload(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  };
+
+  const removeImage = () => {
+    setConfig({...config, uploadedImage: undefined});
+  };
 
   return (
     <section id="calculator" className="container mx-auto py-16 md:py-24 bg-gradient-to-br from-blue-50 to-purple-50">
@@ -212,6 +259,80 @@ export default function PriceCalculator() {
               </Card>
             )}
 
+            {/* Загрузка изображения */}
+            {config.serviceType && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Image className="w-5 h-5" />
+                    Загрузить макет
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {!config.uploadedImage ? (
+                    <div
+                      className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 cursor-pointer ${
+                        dragActive 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                      }`}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onClick={() => document.getElementById('file-upload')?.click()}
+                    >
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleFileUpload(e.target.files)}
+                      />
+                      <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <h3 className="text-lg font-medium mb-2">Перетащите изображение сюда</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        или нажмите, чтобы выбрать файл
+                      </p>
+                      <Button type="button" variant="outline">
+                        Выбрать файл
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        Поддерживаются: JPG, PNG, GIF, SVG • Максимум 10МБ
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="relative bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Image className="w-6 h-6 text-blue-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{config.uploadedImage.name}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {(config.uploadedImage.size / 1024 / 1024).toFixed(2)} МБ
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={removeImage}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div className="bg-green-500 h-2 rounded-full w-full"></div>
+                      </div>
+                      <p className="text-sm text-green-600">✓ Файл загружен успешно</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Количество */}
             {isConfigComplete && (
               <Card>
@@ -281,6 +402,12 @@ export default function PriceCalculator() {
                         <span>Количество:</span>
                         <span className="font-medium">{config.quantity} шт.</span>
                       </div>
+                      <div className="flex justify-between">
+                        <span>Макет:</span>
+                        <span className={`font-medium ${config.uploadedImage ? 'text-green-600' : 'text-gray-500'}`}>
+                          {config.uploadedImage ? '✓ Загружен' : 'Не загружен'}
+                        </span>
+                      </div>
                       {config.quantity >= 10 && (
                         <div className="flex justify-between text-green-600">
                           <span>Скидка:</span>
@@ -329,7 +456,7 @@ export default function PriceCalculator() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-1">✓</span>
-                    <span>Подготовка макета (если нужна)</span>
+                    <span>Подготовка макета (если нужна) или работа с вашим файлом</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-1">✓</span>
