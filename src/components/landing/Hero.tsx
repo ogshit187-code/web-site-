@@ -4,48 +4,66 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   return (
-    <section id="top" aria-label="Главный экран" className="relative min-h-screen">
-      <div className="relative isolate h-screen">
-        <img
-          src={heroImg}
-          alt="DTF печать и машинная вышивка на одежде — примеры изделий"
-          className="w-full h-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-black/20" />
+    <section id="top" aria-label="Главный экран" className="relative min-h-screen bg-white">
+      <div className="relative isolate h-screen pt-24">
+        {/* Background Image with Parallax Effect */}
+        <div className="absolute inset-0 parallax-slow">
+          <img
+            src={heroImg}
+            alt="SMOLIN ATELIER — процесс создания уникальных принтов"
+            className="w-full h-full object-cover opacity-80"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/60" />
+        </div>
         
-        <div className="absolute inset-0 flex items-center">
-          <div className="container mx-auto px-6">
-            <div className="max-w-2xl">
-              <div className="mb-6">
-                <span className="celine-heading text-white/90 tracking-[0.2em] text-xs">
-                  САНКТ‑ПЕТЕРБУРГ
+        {/* Content */}
+        <div className="relative z-10 flex items-center h-full">
+          <div className="container mx-auto px-8">
+            <div className="max-w-4xl">
+              <div className="mb-8">
+                <span className="fashion-heading text-black/60">
+                  ATELIER • САНКТ‑ПЕТЕРБУРГ
                 </span>
               </div>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-light leading-[0.9] text-white mb-8 tracking-tight">
-                ПЕЧАТЬ И ВЫШИВКА<br />
-                НА ОДЕЖДЕ
+              <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.85] text-black mb-12 max-w-3xl">
+                Каждый дизайн<br />
+                <em className="italic font-light">уникален</em>
               </h1>
               
-              <p className="text-lg md:text-xl text-white/90 mb-12 font-light leading-relaxed max-w-lg">
-                От идеи до готового изделия — всего за 1–3 дня. 
-                Профессиональное качество и индивидуальный подход.
-              </p>
+              <div className="max-w-xl mb-16">
+                <p className="text-lg md:text-xl text-black/80 leading-relaxed mb-6">
+                  Мы создаём индивидуальные принты с помощью ручной разработки и AI-технологий. 
+                  Каждое изделие — это результат творческого процесса и технического мастерства.
+                </p>
+                <p className="text-base text-black/60 leading-relaxed">
+                  Индивидуальный кастом и тиражные заказы для маркетплейсов. 
+                  Печать DTF и машинная вышивка премиального качества.
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#calculator">
-                  <Button className="bg-white text-black hover:bg-gray-100 px-12 h-14 rounded-none celine-heading tracking-[0.1em] transition-colors duration-300">
-                    КАЛЬКУЛЯТОР
+              <div className="flex flex-col sm:flex-row gap-6">
+                <a href="#calculator" className="group">
+                  <Button className="bg-black text-white hover:gold-bg hover:text-black px-16 h-16 rounded-none fashion-heading tracking-[0.15em] transition-all duration-700 shadow-micro hover:shadow-soft group-hover:scale-105">
+                    РАССЧИТАТЬ ЗАКАЗ
                   </Button>
                 </a>
-                <a href="#portfolio">
-                  <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black px-12 h-14 rounded-none celine-heading tracking-[0.1em] transition-colors duration-300">
-                    ПОРТФОЛИО
+                <a href="#portfolio" className="group">
+                  <Button variant="outline" className="border-2 border-black text-black hover:bg-black hover:text-white px-16 h-16 rounded-none fashion-heading tracking-[0.15em] transition-all duration-700 group-hover:scale-105">
+                    СМОТРЕТЬ РАБОТЫ
                   </Button>
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Floating Elements */}
+        <div className="absolute bottom-16 right-8 z-20">
+          <div className="fashion-heading text-black/40 text-right">
+            <div>СРОК ИЗГОТОВЛЕНИЯ</div>
+            <div className="text-2xl font-light mt-1">1 ДЕНЬ</div>
           </div>
         </div>
       </div>

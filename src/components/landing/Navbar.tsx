@@ -21,38 +21,40 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full border-b border-gray-200/20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/95"
+      "fixed top-0 z-50 w-full border-b border-black/5 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/90"
     )}>
-      <nav className="container mx-auto flex h-20 items-center justify-between px-6">
-        <a href="#top" className="celine-heading text-black tracking-[0.15em]">
-          PRINT STITCH STUDIO
-        </a>
-        {!isMobile && (
-          <ul className="hidden gap-8 md:flex">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  className="celine-heading text-gray-700 hover:text-black transition-colors duration-300 tracking-[0.1em]"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="flex items-center gap-4">
+      <nav className="container mx-auto flex h-24 items-center justify-between px-8">
+        <div className="flex flex-col">
+          <a href="#top" className="atelier-title text-2xl text-black tracking-[0.02em]">
+            SMOLIN ATELIER
+          </a>
+          <span className="fashion-heading mt-0.5">
+            ПЕЧАТЬ DTF И МАШИННАЯ ВЫШИВКА В САНКТ-ПЕТЕРБУРГЕ — СРОК ИЗГОТОВЛЕНИЯ 1 ДЕНЬ
+          </span>
+        </div>
+        <div className="hidden lg:flex items-center gap-12">
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="fashion-heading text-black/70 hover:text-black transition-all duration-500 hover:tracking-[0.2em]"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+        <div className="flex items-center gap-6">
           <a href="#calculator">
-            <Button className="bg-black text-white hover:bg-gray-800 px-8 h-12 rounded-none celine-heading tracking-[0.05em] transition-colors duration-300">
-              КАЛЬКУЛЯТОР
+            <Button className="bg-black text-white hover:sand-bg hover:text-black px-12 h-14 rounded-none fashion-heading tracking-[0.1em] transition-all duration-500 shadow-micro hover:shadow-soft">
+              РАССЧИТАТЬ ЗАКАЗ
             </Button>
           </a>
           <button 
             aria-label="Меню" 
-            className="text-gray-700 hover:text-black transition-colors duration-300 p-2"
+            className="text-black/60 hover:text-black transition-colors duration-300 p-3"
             onClick={() => setIsSidebarOpen(true)}
           >
-            <Menu className="size-6" strokeWidth={1} />
+            <Menu className="size-5" strokeWidth={1.5} />
           </button>
         </div>
 

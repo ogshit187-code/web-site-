@@ -8,35 +8,35 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Celine-inspired minimalist palette */
-    --background: 0 0% 99%;
-    --foreground: 210 12% 13%;
+    /* SMOLIN ATELIER - Fashion brand palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 12% 13%;
+    --card-foreground: 0 0% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 12% 13%;
+    --popover-foreground: 0 0% 5%;
 
-    /* Elegant black as primary */
-    --primary: 210 12% 13%;
-    --primary-foreground: 0 0% 99%;
+    /* Pure black for fashion aesthetics */
+    --primary: 0 0% 5%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 8% 96%;
-    --secondary-foreground: 210 12% 13%;
+    --secondary: 0 0% 98%;
+    --secondary-foreground: 0 0% 5%;
 
-    --muted: 210 8% 97%;
-    --muted-foreground: 210 7% 46%;
+    --muted: 0 0% 99%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 210 8% 95%;
-    --accent-foreground: 210 12% 13%;
+    --accent: 45 100% 92%;
+    --accent-foreground: 0 0% 5%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 99%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 210 8% 92%;
-    --input: 210 8% 92%;
-    --ring: 210 12% 13%;
+    --border: 0 0% 94%;
+    --input: 0 0% 96%;
+    --ring: 0 0% 5%;
 
     --radius: 0;
 
@@ -50,12 +50,14 @@ All colors MUST be HSL.
     --sidebar-border: 210 8% 92%;
     --sidebar-ring: 210 12% 13%;
 
-    /* Celine-inspired extras */
-    --celine-gray: 210 7% 46%;
-    --celine-light: 210 8% 97%;
-    --celine-border: 210 8% 88%;
-    --shadow-elegant: 0 2px 20px rgba(0, 0, 0, 0.08);
-    --shadow-subtle: 0 1px 10px rgba(0, 0, 0, 0.04);
+    /* SMOLIN ATELIER fashion extras */
+    --sand: 45 85% 85%;
+    --sand-dark: 45 50% 70%;
+    --gold: 45 100% 75%;
+    --fashion-gray: 0 0% 85%;
+    --deep-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --soft-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+    --micro-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   .dark {
@@ -106,29 +108,55 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 400;
-    letter-spacing: -0.011em;
-    line-height: 1.6;
+    letter-spacing: 0.01em;
+    line-height: 1.65;
+    font-feature-settings: "kern" 1, "liga" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Times New Roman', serif;
     font-weight: 300;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
 
-  .celine-heading {
+  .fashion-heading {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .atelier-title {
+    font-family: 'Playfair Display', serif;
     font-weight: 300;
     letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-size: 0.875rem;
+    font-feature-settings: "swsh" 1;
   }
 }
 
 @layer utilities {
-  .shadow-elegant { box-shadow: var(--shadow-elegant); }
-  .shadow-subtle { box-shadow: var(--shadow-subtle); }
+  .shadow-deep { box-shadow: var(--deep-shadow); }
+  .shadow-soft { box-shadow: var(--soft-shadow); }
+  .shadow-micro { box-shadow: var(--micro-shadow); }
   
-  .celine-border { border-color: hsl(var(--celine-border)); }
-  .celine-text { color: hsl(var(--celine-gray)); }
-  .celine-bg { background-color: hsl(var(--celine-light)); }
+  .sand-bg { background-color: hsl(var(--sand)); }
+  .sand-dark-bg { background-color: hsl(var(--sand-dark)); }
+  .gold-bg { background-color: hsl(var(--gold)); }
+  .fashion-border { border-color: hsl(var(--fashion-gray)); }
+  
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--soft-shadow);
+  }
+  
+  .parallax-slow {
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.6s ease-out;
+  }
 }
