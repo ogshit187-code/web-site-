@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, Shirt, Brush, BadgeCheck, Plus, Minus, Upload, Image, X } from "lucide-react";
+import ProductPreview3D from "@/components/constructor/ProductPreview3D";
 
 interface CalculatorConfig {
   garmentType: string;
@@ -11,6 +12,9 @@ interface CalculatorConfig {
   printSize: string;
   quantity: number;
   uploadedImage?: File;
+  printPosition: string;
+  customPrintSize: { width: number; height: number };
+  garmentColor: string;
 }
 
 const garmentTypes = [
@@ -62,7 +66,10 @@ export default function PriceCalculator() {
     garmentType: '',
     serviceType: '',
     printSize: 'medium',
-    quantity: 1
+    quantity: 1,
+    printPosition: 'chest',
+    customPrintSize: { width: 15, height: 15 },
+    garmentColor: 'white'
   });
 
   const [showDetails, setShowDetails] = useState(false);
@@ -73,10 +80,34 @@ export default function PriceCalculator() {
   const selectedSize = printSizes.find(s => s.id === config.printSize);
 
   const calculatePrice = () => {
-    if (!selectedGarment || !selectedService || !selectedSize) return 0;
+    if (!selectedGarment || !selectedService) return 0;
     
     const garmentPrice = selectedGarment.basePrice;
-    const servicePrice = selectedService.basePrice * selectedSize.multiplier;
+    
+    // Базовая цена услуги
+    let servicePrice = selectedService.basePrice;
+    
+    // Множитель размера - если выбран стандартный размер
+    if (selectedSize) {
+      servicePrice *= selectedSize.multiplier;
+    } else {
+      // Расчет по пользовательскому размеру
+      const area = config.customPrintSize.width * config.customPrintSize.height;
+      const baseArea = 15 * 15; // базовая площадь 15x15 см
+      const sizeMultiplier = Math.max(1, area / baseArea);
+      servicePrice *= sizeMultiplier;
+    }
+    
+    // Множитель позиции (некоторые позиции сложнее)
+    const positionMultipliers: Record<string, number> = {
+      'chest': 1,
+      'back': 1.1,
+      'sleeve-left': 1.2,
+      'sleeve-right': 1.2,
+      'hood': 1.3,
+    };
+    servicePrice *= positionMultipliers[config.printPosition] || 1;
+    
     const totalPerItem = garmentPrice + servicePrice;
     
     // Скидки за количество
@@ -89,8 +120,8 @@ export default function PriceCalculator() {
   };
 
   const pricePerItem = () => {
-    if (!selectedGarment || !selectedService || !selectedSize) return 0;
-    return selectedGarment.basePrice + (selectedService.basePrice * selectedSize.multiplier);
+    const totalPrice = calculatePrice();
+    return config.quantity > 0 ? Math.round(totalPrice / config.quantity) : 0;
   };
 
   const getDiscountText = () => {
@@ -159,7 +190,7 @@ export default function PriceCalculator() {
           <p className="text-muted-foreground">Узнайте точную стоимость вашего заказа за 30 секунд</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* Левая колонка - настройки */}
           <div className="space-y-6">
             {/* Выбор изделия */}
@@ -367,6 +398,31 @@ export default function PriceCalculator() {
                     <p>• от 10 шт. — скидка 10%</p>
                     <p>• от 20 шт. — скидка 15%</p>
                     <p>• от 50 шт. — скидка 20%</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Средняя колонка - 3D превью */}
+          <div className="space-y-6">
+            {config.garmentType && (
+              <ProductPreview3D
+                garmentType={config.garmentType}
+                garmentColor={config.garmentColor}
+                printPosition={config.printPosition}
+                printSize={config.customPrintSize}
+                uploadedImage={config.uploadedImage}
+                onPositionChange={(position) => setConfig({...config, printPosition: position})}
+                onSizeChange={(size) => setConfig({...config, customPrintSize: size})}
+              />
+            )}
+            {!config.garmentType && (
+              <Card>
+                <CardContent className="flex items-center justify-center h-96">
+                  <div className="text-center text-muted-foreground">
+                    <Shirt className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                    <p>Выберите изделие, чтобы увидеть 3D превью</p>
                   </div>
                 </CardContent>
               </Card>
