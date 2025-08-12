@@ -21,6 +21,7 @@ interface ProductPreview3DProps {
   uploadedImage?: File;
   onPositionChange: (position: string) => void;
   onSizeChange: (size: { width: number; height: number }) => void;
+  onColorChange: (color: string) => void;
 }
 
 const garmentPositions: Record<string, PrintPosition[]> = {
@@ -60,12 +61,15 @@ export default function ProductPreview3D({
   printSize,
   uploadedImage,
   onPositionChange,
-  onSizeChange
+  onSizeChange,
+  onColorChange
 }: ProductPreview3DProps) {
   const [view, setView] = useState<'front' | 'back'>('front');
   const [zoom, setZoom] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
+  const [isDraggingPrint, setIsDraggingPrint] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [printOffset, setPrintOffset] = useState({ x: 0, y: 0 });
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,12 +92,44 @@ export default function ProductPreview3D({
 
   const handlePositionClick = (positionId: string) => {
     onPositionChange(positionId);
+    setPrintOffset({ x: 0, y: 0 }); // Сброс смещения при смене позиции
   };
 
   const handleSizeChange = (dimension: 'width' | 'height', delta: number) => {
     const newSize = { ...printSize };
     newSize[dimension] = Math.max(5, Math.min(currentPosition.maxWidth, newSize[dimension] + delta));
     onSizeChange(newSize);
+  };
+
+  // Функции для перетаскивания принта
+  const handlePrintMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPrint(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handlePrintMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingPrint) return;
+    
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+    
+    // Конвертируем пиксели в проценты (примерно)
+    const offsetX = (deltaX / 400) * 100;
+    const offsetY = (deltaY / 400) * 100;
+    
+    // Ограничиваем смещение в разумных пределах
+    const maxOffset = 20;
+    const newOffsetX = Math.max(-maxOffset, Math.min(maxOffset, printOffset.x + offsetX));
+    const newOffsetY = Math.max(-maxOffset, Math.min(maxOffset, printOffset.y + offsetY));
+    
+    setPrintOffset({ x: newOffsetX, y: newOffsetY });
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handlePrintMouseUp = () => {
+    setIsDraggingPrint(false);
   };
 
   const getGarmentSVG = () => {
@@ -156,35 +192,20 @@ export default function ProductPreview3D({
   const renderPrintArea = () => {
     if (!currentPosition) return null;
 
-    const printX = (currentPosition.x / 100) * 400 - (printSize.width / 100) * 200;
-    const printY = (currentPosition.y / 100) * 400 - (printSize.height / 100) * 200;
+    // Базовая позиция + смещение от перетаскивания
+    const baseX = (currentPosition.x / 100) * 400;
+    const baseY = (currentPosition.y / 100) * 400;
+    const offsetX = (printOffset.x / 100) * 400;
+    const offsetY = (printOffset.y / 100) * 400;
+    
+    const printX = baseX + offsetX - (printSize.width / 100) * 200;
+    const printY = baseY + offsetY - (printSize.height / 100) * 200;
     const printWidth = (printSize.width / 100) * 400;
     const printHeight = (printSize.height / 100) * 400;
 
     return (
       <g>
-        {/* Область принта */}
-        <rect
-          x={printX}
-          y={printY}
-          width={printWidth}
-          height={printHeight}
-          fill={imageUrl ? `url(#print-pattern)` : 'rgba(59, 130, 246, 0.3)'}
-          stroke="#3B82F6"
-          strokeWidth="2"
-          strokeDasharray="5,5"
-          rx="4"
-        />
-        
-        {/* Центральная точка */}
-        <circle
-          cx={currentPosition.x / 100 * 400}
-          cy={currentPosition.y / 100 * 400}
-          r="4"
-          fill="#3B82F6"
-        />
-        
-        {/* Загруженное изображение */}
+        {/* Загруженное изображение - паттерн */}
         {imageUrl && (
           <defs>
             <pattern id="print-pattern" x="0" y="0" width="1" height="1">
@@ -199,6 +220,52 @@ export default function ProductPreview3D({
             </pattern>
           </defs>
         )}
+        
+        {/* Область принта */}
+        <rect
+          x={printX}
+          y={printY}
+          width={printWidth}
+          height={printHeight}
+          fill={imageUrl ? `url(#print-pattern)` : 'rgba(59, 130, 246, 0.3)'}
+          stroke="#3B82F6"
+          strokeWidth="2"
+          strokeDasharray="5,5"
+          rx="4"
+          style={{ cursor: 'move' }}
+          onMouseDown={handlePrintMouseDown}
+        />
+        
+        {/* Центральная точка с подписью */}
+        <g>
+          <circle
+            cx={baseX + offsetX}
+            cy={baseY + offsetY}
+            r="4"
+            fill="#3B82F6"
+          />
+          <text
+            x={baseX + offsetX}
+            y={baseY + offsetY - 10}
+            textAnchor="middle"
+            fontSize="12"
+            fill="#1F2937"
+            fontWeight="bold"
+          >
+            {currentPosition.name}
+          </text>
+        </g>
+        
+        {/* Размеры принта */}
+        <text
+          x={printX + printWidth/2}
+          y={printY + printHeight + 15}
+          textAnchor="middle"
+          fontSize="10"
+          fill="#6B7280"
+        >
+          {printSize.width}×{printSize.height}см
+        </text>
       </g>
     );
   };
@@ -229,6 +296,9 @@ export default function ProductPreview3D({
               viewBox="0 0 400 400"
               className="absolute inset-0"
               style={{ transform: `scale(${zoom})` }}
+              onMouseMove={handlePrintMouseMove}
+              onMouseUp={handlePrintMouseUp}
+              onMouseLeave={handlePrintMouseUp}
             >
               {/* Фон */}
               <rect width="400" height="400" fill="url(#bg-gradient)" />
@@ -355,8 +425,9 @@ export default function ProductPreview3D({
               </div>
             </div>
             
-            <div className="text-xs text-muted-foreground text-center">
-              Максимальный размер для {currentPosition?.name}: {currentPosition?.maxWidth}×{currentPosition?.maxHeight}см
+            <div className="text-xs text-muted-foreground text-center space-y-1">
+              <div>Максимальный размер для {currentPosition?.name}: {currentPosition?.maxWidth}×{currentPosition?.maxHeight}см</div>
+              <div className="text-blue-600">💡 Перетащите принт на 3D модели для точного позиционирования</div>
             </div>
           </div>
         </CardContent>
@@ -381,7 +452,7 @@ export default function ProductPreview3D({
                   backgroundColor: color.color,
                   borderColor: color.border 
                 }}
-                onClick={() => {/* TODO: добавить изменение цвета */}}
+                onClick={() => onColorChange(color.id)}
                 title={color.name}
               />
             ))}

@@ -415,6 +415,7 @@ export default function PriceCalculator() {
                 uploadedImage={config.uploadedImage}
                 onPositionChange={(position) => setConfig({...config, printPosition: position})}
                 onSizeChange={(size) => setConfig({...config, customPrintSize: size})}
+                onColorChange={(color) => setConfig({...config, garmentColor: color})}
               />
             )}
             {!config.garmentType && (
