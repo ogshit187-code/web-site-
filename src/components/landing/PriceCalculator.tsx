@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Shirt, TrendingUp, Users } from "lucide-react";
+import { Shirt, TrendingUp, Users, Sparkles } from "lucide-react";
 import { useClientType, usePricing } from "@/contexts/ClientTypeContext";
 import ProductPreview3D from "@/components/constructor/ProductPreview3D";
 
@@ -87,6 +87,23 @@ const sides = [
 export default function PriceCalculator() {
   const { isRetail, isWholesale } = useClientType();
   const { getPriceMultiplier, getMinimumQuantity, getDiscountBreakpoints } = usePricing();
+  
+  // Проверяем наличие AI дизайна из localStorage
+  const [aiDesign, setAiDesign] = useState<any>(null);
+  
+  useEffect(() => {
+    const savedDesign = localStorage.getItem('ai-generated-design');
+    if (savedDesign) {
+      try {
+        const design = JSON.parse(savedDesign);
+        setAiDesign(design);
+        // Очищаем после использования
+        localStorage.removeItem('ai-generated-design');
+      } catch (error) {
+        console.error('Error parsing AI design:', error);
+      }
+    }
+  }, []);
   
   const [config, setConfig] = useState<ExtendedCalculatorConfig>({
     garmentType: "",
@@ -276,23 +293,38 @@ export default function PriceCalculator() {
                 }}
                 onMouseDown={() => setIsDragging(true)}
               >
-                <div className={`
-                  w-16 h-12 rounded-minimal border-2 border-dashed transition-all duration-200
-                  ${config.side === "front" ? 'border-brand-blue bg-brand-blue/20' : 
-                    config.side === "back" ? 'border-brand-green bg-brand-green/20' : 
-                    'border-brand-purple bg-brand-purple/20'}
-                  ${isDragging ? 'animate-pulse' : ''}
-                  flex items-center justify-center
-                `}>
-                  <span className={`text-xs font-medium ${
-                    config.side === "front" ? 'text-brand-blue' : 
-                    config.side === "back" ? 'text-brand-green' : 
-                    'text-brand-purple'
-                  }`}>
-                    {config.side === "front" ? "ПРИНТ" : 
-                     config.side === "back" ? "СПИНА" : "ПРИНТ"}
-                  </span>
-                </div>
+                {aiDesign ? (
+                  // AI дизайн
+                  <div className="relative">
+                    <img 
+                      src={aiDesign.generatedImage}
+                      alt="AI Design"
+                      className="w-16 h-12 object-cover rounded-minimal border-2 border-brand-purple shadow-lg"
+                    />
+                    <div className="absolute -top-2 -right-2 w-5 h-5 bg-brand-purple rounded-full flex items-center justify-center">
+                      <Sparkles className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+                ) : (
+                  // Обычная область принта
+                  <div className={`
+                    w-16 h-12 rounded-minimal border-2 border-dashed transition-all duration-200
+                    ${config.side === "front" ? 'border-brand-blue bg-brand-blue/20' : 
+                      config.side === "back" ? 'border-brand-green bg-brand-green/20' : 
+                      'border-brand-purple bg-brand-purple/20'}
+                    ${isDragging ? 'animate-pulse' : ''}
+                    flex items-center justify-center
+                  `}>
+                    <span className={`text-xs font-medium ${
+                      config.side === "front" ? 'text-brand-blue' : 
+                      config.side === "back" ? 'text-brand-green' : 
+                      'text-brand-purple'
+                    }`}>
+                      {config.side === "front" ? "ПРИНТ" : 
+                       config.side === "back" ? "СПИНА" : "ПРИНТ"}
+                    </span>
+                  </div>
+                )}
               </div>
               
               {/* Линейка размеров принта */}
@@ -456,6 +488,15 @@ export default function PriceCalculator() {
             <div className="mt-4 text-center">
               <Badge variant="secondary" className="bg-brand-green/10 text-brand-green border-brand-green/20">
                 Базовая скидка 20% уже применена
+              </Badge>
+            </div>
+          )}
+          
+          {aiDesign && (
+            <div className="mt-4 text-center">
+              <Badge className="bg-gradient-to-r from-brand-purple to-brand-blue text-white px-4 py-2">
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI дизайн "{aiDesign.style.name}" загружен!
               </Badge>
             </div>
           )}

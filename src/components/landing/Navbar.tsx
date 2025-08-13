@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useClientType } from "@/contexts/ClientTypeContext";
-import { User, Building2, RefreshCw } from "lucide-react";
+import { User, Building2, RefreshCw, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const NAV_ITEMS = [
   { href: "#about", label: "О нас" },
   { href: "#services", label: "Услуги и цены" },
   { href: "#calculator", label: "Калькулятор" },
+  { href: "/ai-design", label: "AI Дизайнер", external: true },
   { href: "#process", label: "Как мы работаем" },
   { href: "#portfolio", label: "Портфолио" },
   { href: "#reviews", label: "Отзывы" },
@@ -38,13 +40,24 @@ export default function Navbar() {
         {/* Clean navigation */}
         <div className="hidden lg:flex items-center gap-8">
           {NAV_ITEMS.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="minimal-heading hover:text-foreground transition-colors duration-200"
-            >
-              {item.label}
-            </a>
+            item.external ? (
+              <Link
+                key={item.href}
+                to={item.href}
+                className="minimal-heading hover:text-foreground transition-colors duration-200 flex items-center gap-2"
+              >
+                {item.label === "AI Дизайнер" && <Sparkles className="w-4 h-4" />}
+                {item.label}
+              </Link>
+            ) : (
+              <a
+                key={item.href}
+                href={item.href}
+                className="minimal-heading hover:text-foreground transition-colors duration-200"
+              >
+                {item.label}
+              </a>
+            )
           ))}
         </div>
         
