@@ -1,9 +1,5 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Menu } from "lucide-react";
-import { Sidebar } from "@/components/ui/sidebar";
 
 const NAV_ITEMS = [
   { href: "#about", label: "О нас" },
@@ -16,8 +12,6 @@ const NAV_ITEMS = [
 ];
 
 export default function Navbar() {
-  const isMobile = useIsMobile();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <header className={cn(
@@ -57,22 +51,8 @@ export default function Navbar() {
               Калькулятор
             </Button>
           </a>
-          
-          <button 
-            aria-label="Меню" 
-            className="p-2 hover:bg-muted rounded-minimal transition-colors"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu className="w-5 h-5" />
-          </button>
         </div>
       </nav>
-
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-      />
     </header>
   );
 }
