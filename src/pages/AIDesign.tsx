@@ -159,21 +159,48 @@ export default function AIDesign() {
 
     setIsGenerating(true);
     
-    // Симуляция AI генерации (в реальном проекте здесь будет API call)
-    setTimeout(() => {
-      const newDesign: GeneratedDesign = {
-        id: Date.now().toString(),
-        originalImage: uploadedImage,
-        generatedImage: uploadedImage, // В реальности это будет результат ИИ
-        style: selectedStyle,
-        prompt: customPrompt || selectedStyle.prompt,
-        timestamp: Date.now()
-      };
+    try {
+      // Реальный вызов API для генерации изображения
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: customPrompt || selectedStyle.prompt,
+          style: selectedStyle.name,
+          size: '1024x1024',
+          quality: 'standard'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+
+      const result = await response.json();
       
-      setGeneratedDesigns(prev => [newDesign, ...prev]);
-      setSelectedDesign(newDesign);
+      if (result.success) {
+        const newDesign: GeneratedDesign = {
+          id: Date.now().toString(),
+          originalImage: uploadedImage,
+          generatedImage: result.data.url, // URL сгенерированного изображения
+          style: selectedStyle,
+          prompt: customPrompt || selectedStyle.prompt,
+          timestamp: Date.now()
+        };
+        
+        setGeneratedDesigns(prev => [newDesign, ...prev]);
+        setSelectedDesign(newDesign);
+      } else {
+        throw new Error(result.error || 'Generation failed');
+      }
+    } catch (error) {
+      console.error('Error generating design:', error);
+      alert('Ошибка при генерации дизайна. Попробуйте еще раз.');
+    } finally {
       setIsGenerating(false);
-    }, 3000);
+    }
   };
 
   const proceedToOrder = () => {
