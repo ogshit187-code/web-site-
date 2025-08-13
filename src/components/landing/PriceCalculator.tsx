@@ -116,142 +116,277 @@ export default function PriceCalculator() {
     return totalForQuantity;
   };
 
-  // Современный компонент визуализации одежды
+  // Современный компонент визуализации одежды с drag & drop
   const ClothingVisualization = () => {
     const selectedColor = garmentColors.find(c => c.id === config.garmentColor);
+    const [printPosition, setPrintPosition] = useState({ x: 50, y: 40 }); // Процентные координаты
+    const [isDragging, setIsDragging] = useState(false);
+    
+    const handlePrintDrag = (e: React.MouseEvent) => {
+      if (!isDragging) return;
+      
+      const container = e.currentTarget.getBoundingClientRect();
+      const x = ((e.clientX - container.left) / container.width) * 100;
+      const y = ((e.clientY - container.top) / container.height) * 100;
+      
+      // Ограничиваем позицию в пределах одежды
+      const boundedX = Math.max(20, Math.min(80, x));
+      const boundedY = Math.max(20, Math.min(70, y));
+      
+      setPrintPosition({ x: boundedX, y: boundedY });
+    };
+
+    // Улучшенные SVG макеты одежды
+    const renderGarment = () => {
+      const commonProps = {
+        fill: selectedColor?.color || "#ffffff",
+        stroke: "#d1d5db",
+        strokeWidth: "1.5",
+        className: "filter drop-shadow-md"
+      };
+
+      switch (config.garmentType) {
+        case "tshirt":
+          return (
+            <svg width="280" height="320" viewBox="0 0 280 320" className="mx-auto">
+              {/* Основа футболки - более реалистичная */}
+              <path
+                d="M80 80 L80 55 Q80 40 95 40 L185 40 Q200 40 200 55 L200 80 L240 105 L240 280 Q240 295 225 295 L55 295 Q40 295 40 280 L40 105 Z"
+                {...commonProps}
+              />
+              {/* Левый рукав */}
+              <path
+                d="M40 105 Q25 95 20 105 Q15 115 20 125 Q25 135 35 130 L40 125"
+                {...commonProps}
+              />
+              {/* Правый рукав */}
+              <path
+                d="M240 105 Q255 95 260 105 Q265 115 260 125 Q255 135 245 130 L240 125"
+                {...commonProps}
+              />
+              {/* Воротник */}
+              <path
+                d="M95 40 Q140 30 185 40 Q190 45 185 50 Q140 35 95 50 Q90 45 95 40"
+                {...commonProps}
+              />
+            </svg>
+          );
+          
+        case "hoodie":
+          return (
+            <svg width="300" height="360" viewBox="0 0 300 360" className="mx-auto">
+              {/* Основа худи */}
+              <path
+                d="M75 95 L75 70 Q75 50 95 50 L205 50 Q225 50 225 70 L225 95 L265 120 L265 320 Q265 340 245 340 L55 340 Q35 340 35 320 L35 120 Z"
+                {...commonProps}
+              />
+              {/* Капюшон - более объемный */}
+              <path
+                d="M95 50 Q150 25 205 50 Q220 60 205 75 Q175 60 150 55 Q125 60 95 75 Q80 60 95 50"
+                {...commonProps}
+              />
+              {/* Левый рукав */}
+              <path
+                d="M35 120 Q20 110 15 120 Q10 130 15 140 Q20 150 30 145 L35 140"
+                {...commonProps}
+              />
+              {/* Правый рукав */}
+              <path
+                d="M265 120 Q280 110 285 120 Q290 130 285 140 Q280 150 270 145 L265 140"
+                {...commonProps}
+              />
+              {/* Кенгуру карман */}
+              <rect
+                x="110" y="180" width="80" height="50"
+                fill="none" stroke={selectedColor?.color === "#ffffff" ? "#e5e7eb" : "#ffffff"}
+                strokeWidth="1" rx="8"
+                opacity="0.6"
+              />
+            </svg>
+          );
+          
+        case "sweatshirt":
+          return (
+            <svg width="290" height="340" viewBox="0 0 290 340" className="mx-auto">
+              {/* Основа свитшота */}
+              <path
+                d="M78 88 L78 62 Q78 45 98 45 L192 45 Q212 45 212 62 L212 88 L252 113 L252 300 Q252 320 232 320 L58 320 Q38 320 38 300 L38 113 Z"
+                {...commonProps}
+              />
+              {/* Левый рукав - длинный */}
+              <path
+                d="M38 113 Q23 103 18 113 Q13 123 18 133 Q23 143 33 138 L38 133"
+                {...commonProps}
+              />
+              {/* Правый рукав - длинный */}
+              <path
+                d="M252 113 Q267 103 272 113 Q277 123 272 133 Q267 143 257 138 L252 133"
+                {...commonProps}
+              />
+              {/* Круглый вырез */}
+              <circle
+                cx="145" cy="62" r="17"
+                fill="none" stroke={selectedColor?.color === "#ffffff" ? "#e5e7eb" : "#ffffff"}
+                strokeWidth="1.5"
+              />
+            </svg>
+          );
+          
+        default:
+          return null;
+      }
+    };
     
     return (
-      <div className="bg-muted/20 rounded-large p-8 flex items-center justify-center min-h-[500px] relative overflow-hidden">
+      <div className="bg-gradient-to-br from-muted/10 to-muted/30 rounded-large p-8 min-h-[600px] relative overflow-hidden">
         {/* Декоративные элементы */}
-        <div className="absolute top-4 left-4 w-16 h-16 pattern-dots opacity-20"></div>
-        <div className="absolute bottom-4 right-4 w-20 h-20 pattern-grid opacity-20"></div>
+        <div className="absolute top-4 left-4 w-16 h-16 pattern-dots opacity-10"></div>
+        <div className="absolute bottom-4 right-4 w-20 h-20 pattern-grid opacity-10"></div>
         
         {config.garmentType ? (
-          <div className="relative">
+          <div className="relative flex flex-col items-center">
             {/* Основа одежды */}
-            <div className="relative">
-              {config.garmentType === "tshirt" && (
-                <svg width="200" height="240" viewBox="0 0 200 240" className="drop-shadow-lg">
-                  {/* Футболка */}
-                  <path
-                    d="M60 60 L60 40 Q60 30 70 30 L130 30 Q140 30 140 40 L140 60 L170 80 L170 220 Q170 230 160 230 L40 230 Q30 230 30 220 L30 80 Z"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  {/* Рукава */}
-                  <path
-                    d="M30 80 Q20 70 15 80 Q10 90 15 100 L25 95 Q30 90 30 85"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M170 80 Q180 70 185 80 Q190 90 185 100 L175 95 Q170 90 170 85"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                </svg>
-              )}
+            <div 
+              className="relative cursor-crosshair"
+              onMouseMove={handlePrintDrag}
+              onMouseUp={() => setIsDragging(false)}
+              onMouseLeave={() => setIsDragging(false)}
+            >
+              {renderGarment()}
               
-              {config.garmentType === "hoodie" && (
-                <svg width="200" height="260" viewBox="0 0 200 260" className="drop-shadow-lg">
-                  {/* Худи */}
-                  <path
-                    d="M50 70 L50 50 Q50 40 60 40 L140 40 Q150 40 150 50 L150 70 L180 90 L180 240 Q180 250 170 250 L30 250 Q20 250 20 240 L20 90 Z"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  {/* Капюшон */}
-                  <path
-                    d="M60 40 Q100 20 140 40 Q150 45 140 55 Q100 35 60 55 Q50 45 60 40"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  {/* Рукава */}
-                  <path
-                    d="M20 90 Q10 80 5 90 Q0 100 5 110 L15 105 Q20 100 20 95"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M180 90 Q190 80 195 90 Q200 100 195 110 L185 105 Q180 100 180 95"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                </svg>
-              )}
-              
-              {config.garmentType === "sweatshirt" && (
-                <svg width="200" height="250" viewBox="0 0 200 250" className="drop-shadow-lg">
-                  {/* Свитшот */}
-                  <path
-                    d="M55 65 L55 45 Q55 35 65 35 L135 35 Q145 35 145 45 L145 65 L175 85 L175 230 Q175 240 165 240 L35 240 Q25 240 25 230 L25 85 Z"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  {/* Рукава */}
-                  <path
-                    d="M25 85 Q15 75 10 85 Q5 95 10 105 L20 100 Q25 95 25 90"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M175 85 Q185 75 190 85 Q195 95 190 105 L180 100 Q175 95 175 90"
-                    fill={selectedColor?.color || "#ffffff"}
-                    stroke="#e5e7eb"
-                    strokeWidth="2"
-                  />
-                </svg>
-              )}
-              
-              {/* Область принта */}
-              {config.side === "front" && (
-                <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-20 h-16 border-2 border-dashed border-brand-blue bg-brand-blue/10 rounded-minimal flex items-center justify-center">
-                  <span className="text-xs font-medium text-brand-blue">ПРИНТ</span>
+              {/* Перетаскиваемая область принта */}
+              <div
+                className={`absolute cursor-move transition-all duration-200 ${
+                  isDragging ? 'scale-110 shadow-lg' : 'hover:scale-105'
+                }`}
+                style={{
+                  left: `${printPosition.x}%`,
+                  top: `${printPosition.y}%`,
+                  transform: 'translate(-50%, -50%)'
+                }}
+                onMouseDown={() => setIsDragging(true)}
+              >
+                <div className={`
+                  w-16 h-12 rounded-minimal border-2 border-dashed transition-all duration-200
+                  ${config.side === "front" ? 'border-brand-blue bg-brand-blue/20' : 
+                    config.side === "back" ? 'border-brand-green bg-brand-green/20' : 
+                    'border-brand-purple bg-brand-purple/20'}
+                  ${isDragging ? 'animate-pulse' : ''}
+                  flex items-center justify-center
+                `}>
+                  <span className={`text-xs font-medium ${
+                    config.side === "front" ? 'text-brand-blue' : 
+                    config.side === "back" ? 'text-brand-green' : 
+                    'text-brand-purple'
+                  }`}>
+                    {config.side === "front" ? "ПРИНТ" : 
+                     config.side === "back" ? "СПИНА" : "ПРИНТ"}
+                  </span>
                 </div>
-              )}
+              </div>
               
-              {config.side === "back" && (
-                <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-24 h-20 border-2 border-dashed border-brand-green bg-brand-green/10 rounded-minimal flex items-center justify-center">
-                  <span className="text-xs font-medium text-brand-green">СПИНА</span>
-                </div>
-              )}
-              
-              {config.side === "both" && (
-                <>
-                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-16 h-12 border-2 border-dashed border-brand-blue bg-brand-blue/10 rounded-minimal flex items-center justify-center">
-                    <span className="text-xs font-medium text-brand-blue">ПЕРЕД</span>
-                  </div>
-                  <div className="absolute top-32 left-1/2 transform -translate-x-1/2 w-16 h-12 border-2 border-dashed border-brand-green bg-brand-green/10 rounded-minimal flex items-center justify-center">
-                    <span className="text-xs font-medium text-brand-green">СПИНА</span>
-                  </div>
-                </>
-              )}
+              {/* Линейка размеров принта */}
+              <div className="absolute top-2 right-2 bg-white/90 backdrop-blur rounded-minimal px-2 py-1 text-xs">
+                {config.customPrintSize.width}×{config.customPrintSize.height} см
+              </div>
             </div>
             
-            {/* Информация о параметрах */}
-            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
-              <div className="bg-white/90 backdrop-blur rounded-minimal px-3 py-1 shadow-card">
-                <div className="text-xs text-muted-foreground">
-                  {garmentStyles.find(s => s.id === config.garmentStyle)?.name} • {selectedColor?.name}
+            {/* Инструкция */}
+            {!isDragging && (
+              <div className="mt-6 text-center">
+                <div className="bg-white/90 backdrop-blur rounded-large px-4 py-2 shadow-card">
+                  <p className="text-sm text-muted-foreground mb-1">
+                    💡 Перетащите область принта в нужное место
+                  </p>
+                  <div className="text-xs text-muted-foreground">
+                    {garmentStyles.find(s => s.id === config.garmentStyle)?.name} • {selectedColor?.name}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Размеры принта */}
+            <div className="mt-4 bg-white p-4 rounded-large shadow-card">
+              <h4 className="font-medium mb-3 text-center">Размер принта</h4>
+              <div className="flex items-center justify-center gap-4">
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground">Ширина</div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <button
+                      onClick={() => setConfig({
+                        ...config, 
+                        customPrintSize: { 
+                          ...config.customPrintSize, 
+                          width: Math.max(5, config.customPrintSize.width - 1) 
+                        }
+                      })}
+                      className="w-6 h-6 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
+                    >
+                      -
+                    </button>
+                    <span className="min-w-[30px] text-center text-sm font-medium">
+                      {config.customPrintSize.width}
+                    </span>
+                    <button
+                      onClick={() => setConfig({
+                        ...config, 
+                        customPrintSize: { 
+                          ...config.customPrintSize, 
+                          width: Math.min(40, config.customPrintSize.width + 1) 
+                        }
+                      })}
+                      className="w-6 h-6 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground">Высота</div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <button
+                      onClick={() => setConfig({
+                        ...config, 
+                        customPrintSize: { 
+                          ...config.customPrintSize, 
+                          height: Math.max(5, config.customPrintSize.height - 1) 
+                        }
+                      })}
+                      className="w-6 h-6 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
+                    >
+                      -
+                    </button>
+                    <span className="min-w-[30px] text-center text-sm font-medium">
+                      {config.customPrintSize.height}
+                    </span>
+                    <button
+                      onClick={() => setConfig({
+                        ...config, 
+                        customPrintSize: { 
+                          ...config.customPrintSize, 
+                          height: Math.min(40, config.customPrintSize.height + 1) 
+                        }
+                      })}
+                      className="w-6 h-6 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+            
           </div>
         ) : (
-          <div className="text-center text-muted-foreground">
-            <div className="w-20 h-20 bg-muted rounded-large mx-auto mb-4 flex items-center justify-center">
-              <Shirt className="w-8 h-8" />
+          <div className="text-center text-muted-foreground flex items-center justify-center h-full">
+            <div>
+              <div className="w-20 h-20 bg-muted rounded-large mx-auto mb-4 flex items-center justify-center">
+                <Shirt className="w-8 h-8" />
+              </div>
+              <p className="font-medium">Выберите изделие</p>
+              <p className="text-sm mt-1">Затем настройте принт</p>
             </div>
-            <p className="font-medium">Выберите изделие</p>
           </div>
         )}
       </div>
