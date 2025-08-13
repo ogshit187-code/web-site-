@@ -72,13 +72,15 @@ const Index = () => {
   return (
     <main>
       <Hero />
-      <About />
-      <Services />
-      <PriceCalculator />
-      <Process />
-      <Portfolio />
-      <Testimonials />
-      <Contact />
+      <div className="lg:ml-64">
+        <About />
+        <Services />
+        <PriceCalculator />
+        <Process />
+        <Portfolio />
+        <Testimonials />
+        <Contact />
+      </div>
       <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>

@@ -5,7 +5,6 @@ import { Brush, Shirt, BadgeCheck } from "lucide-react";
 export default function Services() {
   return (
     <section id="services" className="py-16 md:py-24">
-      <div className="lg:ml-64">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mb-10">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Услуги и цены</h2>
@@ -57,9 +56,8 @@ export default function Services() {
             </ul>
           </CardContent>
         </Card>
-      </div>
+              </div>
         </div>
-      </div>
     </section>
   );
 }
