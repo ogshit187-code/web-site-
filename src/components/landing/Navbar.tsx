@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useClientType } from "@/contexts/ClientTypeContext";
+import { User, Building2, RefreshCw } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "#about", label: "О нас" },
@@ -12,6 +15,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Navbar() {
+  const { clientType, isRetail, isWholesale, resetClientType } = useClientType();
 
   return (
     <header className={cn(
@@ -44,11 +48,36 @@ export default function Navbar() {
           ))}
         </div>
         
-        {/* Simple CTA */}
+        {/* Client Type & CTA */}
         <div className="flex items-center gap-4">
+          {/* Client Type Indicator */}
+          {clientType && (
+            <div className="flex items-center gap-2">
+              <Badge 
+                variant="outline" 
+                className={`flex items-center gap-1 ${
+                  isRetail ? 'border-brand-blue text-brand-blue' : 'border-brand-green text-brand-green'
+                }`}
+              >
+                {isRetail ? <User className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
+                {isRetail ? 'Для себя' : 'Для бизнеса'}
+              </Badge>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={resetClientType}
+                className="h-8 w-8 p-0 hover:bg-muted"
+                title="Сменить тип заказов"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
+          
           <a href="#calculator">
             <Button className="bg-foreground text-background hover:bg-foreground/90 h-10 px-6 rounded-minimal">
-              Калькулятор
+              {isWholesale ? 'Оптовый калькулятор' : 'Калькулятор'}
             </Button>
           </a>
         </div>

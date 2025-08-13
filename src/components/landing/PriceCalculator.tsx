@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Shirt } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Shirt, TrendingUp, Users } from "lucide-react";
+import { useClientType, usePricing } from "@/contexts/ClientTypeContext";
 import ProductPreview3D from "@/components/constructor/ProductPreview3D";
 
 // Данные для калькулятора
@@ -83,10 +85,13 @@ const sides = [
 ];
 
 export default function PriceCalculator() {
+  const { isRetail, isWholesale } = useClientType();
+  const { getPriceMultiplier, getMinimumQuantity, getDiscountBreakpoints } = usePricing();
+  
   const [config, setConfig] = useState<ExtendedCalculatorConfig>({
     garmentType: "",
     serviceType: "",
-    quantity: 1,
+    quantity: getMinimumQuantity(),
     garmentColor: "white",
     printPosition: "front",
     customPrintSize: { width: 20, height: 25 },
@@ -105,13 +110,18 @@ export default function PriceCalculator() {
     if (!selectedGarment || !selectedService || !selectedFabric || !selectedSide) return 0;
     
     const basePrice = selectedGarment.basePrice + selectedService.basePrice + selectedFabric.price + selectedSide.price;
-    const totalForQuantity = basePrice * config.quantity;
+    const priceMultiplier = getPriceMultiplier();
+    const adjustedBasePrice = Math.round(basePrice * priceMultiplier);
+    const totalForQuantity = adjustedBasePrice * config.quantity;
     
-    // Скидки на количество
-    if (config.quantity >= 50) return Math.round(totalForQuantity * 0.8);
-    if (config.quantity >= 20) return Math.round(totalForQuantity * 0.85);
-    if (config.quantity >= 10) return Math.round(totalForQuantity * 0.9);
-    if (config.quantity >= 5) return Math.round(totalForQuantity * 0.95);
+    // Применяем скидки в зависимости от типа клиента
+    const discountBreakpoints = getDiscountBreakpoints();
+    for (let i = discountBreakpoints.length - 1; i >= 0; i--) {
+      const breakpoint = discountBreakpoints[i];
+      if (config.quantity >= breakpoint.min) {
+        return Math.round(totalForQuantity * (1 - breakpoint.discount));
+      }
+    }
     
     return totalForQuantity;
   };
@@ -394,10 +404,13 @@ export default function PriceCalculator() {
   };
 
   const getDiscountText = () => {
-    if (config.quantity >= 50) return "20% скидка";
-    if (config.quantity >= 20) return "15% скидка";
-    if (config.quantity >= 10) return "10% скидка";
-    if (config.quantity >= 5) return "5% скидка";
+    const discountBreakpoints = getDiscountBreakpoints();
+    for (let i = discountBreakpoints.length - 1; i >= 0; i--) {
+      const breakpoint = discountBreakpoints[i];
+      if (config.quantity >= breakpoint.min) {
+        return breakpoint.label;
+      }
+    }
     return "";
   };
 
@@ -408,18 +421,44 @@ export default function PriceCalculator() {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-muted rounded-minimal mb-6">
-            <div className="w-2 h-2 bg-brand-purple circle"></div>
-            <span className="minimal-heading">Калькулятор</span>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-muted rounded-minimal">
+              <div className="w-2 h-2 bg-brand-purple circle"></div>
+              <span className="minimal-heading">Калькулятор</span>
+            </div>
+            
+            {/* Client Type Badge */}
+            <Badge 
+              variant="outline" 
+              className={`flex items-center gap-2 px-4 py-2 ${
+                isRetail 
+                  ? 'border-brand-blue text-brand-blue bg-brand-blue/5' 
+                  : 'border-brand-green text-brand-green bg-brand-green/5'
+              }`}
+            >
+              {isRetail ? <Users className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
+              {isRetail ? 'Розничные цены' : 'Оптовые цены'}
+            </Badge>
           </div>
           
           <h2 className="text-4xl lg:text-5xl font-medium mb-6">
-            Рассчитайте стоимость
+            {isRetail ? 'Рассчитайте стоимость' : 'Оптовый калькулятор'}
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Выберите параметры вашего изделия и получите точную цену
+            {isRetail 
+              ? 'Выберите параметры вашего изделия и получите точную цену'
+              : 'Специальные оптовые цены для коммерческих заказов от 10 шт.'
+            }
           </p>
+          
+          {isWholesale && (
+            <div className="mt-4 text-center">
+              <Badge variant="secondary" className="bg-brand-green/10 text-brand-green border-brand-green/20">
+                Базовая скидка 20% уже применена
+              </Badge>
+            </div>
+          )}
         </div>
 
         <div className="max-w-7xl mx-auto">
@@ -564,23 +603,29 @@ export default function PriceCalculator() {
               {/* Количество */}
               <div className="bg-white p-6 rounded-large shadow-card">
                 <h3 className="font-medium mb-4">Количество</h3>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setConfig({...config, quantity: Math.max(1, config.quantity - 1)})}
-                    className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-minimal transition-colors"
-                  >
-                    -
-                  </button>
-                  <div className="text-center min-w-[60px]">
-                    <div className="text-2xl font-medium">{config.quantity}</div>
+                                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => setConfig({...config, quantity: Math.max(getMinimumQuantity(), config.quantity - 1)})}
+                      className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-minimal transition-colors"
+                      disabled={config.quantity <= getMinimumQuantity()}
+                    >
+                      -
+                    </button>
+                    <div className="text-center min-w-[60px]">
+                      <div className="text-2xl font-medium">{config.quantity}</div>
+                      {getMinimumQuantity() > 1 && (
+                        <div className="text-xs text-muted-foreground">
+                          мин. {getMinimumQuantity()}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setConfig({...config, quantity: config.quantity + 1})}
+                      className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-minimal transition-colors"
+                    >
+                      +
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setConfig({...config, quantity: config.quantity + 1})}
-                    className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-minimal transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
               </div>
 
             </div>

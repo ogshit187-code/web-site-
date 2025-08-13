@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import About from "@/components/landing/About";
@@ -8,8 +9,20 @@ import Portfolio from "@/components/landing/Portfolio";
 import Testimonials from "@/components/landing/Testimonials";
 import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
+import ClientTypeSelector from "@/components/ClientTypeSelector";
+import { useClientType } from "@/contexts/ClientTypeContext";
 
 const Index = () => {
+  const { clientType, setClientType } = useClientType();
+
+  // Проверяем localStorage при загрузке
+  useEffect(() => {
+    const savedClientType = localStorage.getItem('smolin-client-type') as 'retail' | 'wholesale' | null;
+    if (savedClientType) {
+      setClientType(savedClientType);
+    }
+  }, [setClientType]);
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -51,6 +64,11 @@ const Index = () => {
       },
     ],
   };
+
+  // Показываем селектор типа клиента, если не выбран
+  if (!clientType) {
+    return <ClientTypeSelector onSelect={setClientType} />;
+  }
 
   return (
     <main>
