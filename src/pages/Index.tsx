@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import AnimatedPrintsHero from "@/components/landing/AnimatedPrintsHero";
+import SimpleTestHero from "@/components/landing/SimpleTestHero";
 import About from "@/components/landing/About";
 import Services from "@/components/landing/Services";
 import BrutalistCalculator from "@/components/landing/BrutalistCalculator";
@@ -71,7 +71,7 @@ const Index = () => {
 
   return (
     <main>
-      <AnimatedPrintsHero />
+      <SimpleTestHero />
       <div>
         <About />
         <Services />
