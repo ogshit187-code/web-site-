@@ -177,6 +177,92 @@ export default function Admin() {
     }
   };
 
+  // Обработка загрузки файлов
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach((file) => {
+      if (file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024) { // 5MB лимит
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newFile = {
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+            name: file.name,
+            url: e.target?.result as string,
+            type: 'image',
+            usage: 'Новое изображение'
+          };
+          setMediaFiles(prev => [...prev, newFile]);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert(`Файл ${file.name} слишком большой или не является изображением`);
+      }
+    });
+  };
+
+  const triggerFileUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+    input.onchange = handleFileUpload;
+    input.click();
+  };
+
+  const editMediaFile = (id: string) => {
+    const file = mediaFiles.find(f => f.id === id);
+    if (!file) return;
+
+    const newUsage = prompt('Описание использования:', file.usage);
+    if (newUsage !== null) {
+      setMediaFiles(prev => 
+        prev.map(f => f.id === id ? { ...f, usage: newUsage } : f)
+      );
+    }
+  };
+
+  // Drag & Drop функциональность
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    imageFiles.forEach((file) => {
+      if (file.size <= 5 * 1024 * 1024) { // 5MB лимит
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newFile = {
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+            name: file.name,
+            url: e.target?.result as string,
+            type: 'image',
+            usage: 'Новое изображение'
+          };
+          setMediaFiles(prev => [...prev, newFile]);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert(`Файл ${file.name} слишком большой (максимум 5MB)`);
+      }
+    });
+  };
+
   // Форма входа
   if (!isAuthenticated) {
     return (
@@ -502,16 +588,38 @@ export default function Admin() {
                   <CardTitle>Загрузка изображений</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
+                  <div 
+                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+                      isDragOver 
+                        ? 'border-brand-blue bg-brand-blue/10' 
+                        : 'border-muted hover:border-brand-blue/50 hover:bg-muted/20'
+                    }`}
+                    onClick={triggerFileUpload}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
                     <div className="space-y-4">
                       <div className="w-16 h-16 bg-muted rounded-lg mx-auto flex items-center justify-center">
                         <Upload className="w-8 h-8 text-muted-foreground" />
                       </div>
                       <div>
-                        <h3 className="font-medium">Загрузите изображения</h3>
-                        <p className="text-sm text-muted-foreground">Поддерживаются JPG, PNG, WebP до 5MB</p>
+                        <h3 className="font-medium">
+                          {isDragOver ? 'Отпустите файлы здесь' : 'Загрузите изображения'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {isDragOver 
+                            ? 'Файлы будут загружены автоматически'
+                            : 'Поддерживаются JPG, PNG, WebP до 5MB'
+                          }
+                        </p>
+                        {!isDragOver && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Нажмите здесь, используйте кнопку или перетащите файлы
+                          </p>
+                        )}
                       </div>
-                      <Button>
+                      <Button onClick={(e) => {e.stopPropagation(); triggerFileUpload();}}>
                         Выбрать файлы
                       </Button>
                     </div>
@@ -538,7 +646,13 @@ export default function Admin() {
                           <p className="text-xs text-muted-foreground">{file.usage}</p>
                         </div>
                         <div className="flex gap-1">
-                          <Button variant="outline" size="sm" className="flex-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => editMediaFile(file.id)}
+                            title="Редактировать описание"
+                          >
                             <Edit className="w-3 h-3" />
                           </Button>
                           <Button 
@@ -546,6 +660,7 @@ export default function Admin() {
                             size="sm" 
                             className="flex-1"
                             onClick={() => deleteMediaFile(file.id)}
+                            title="Удалить файл"
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>
