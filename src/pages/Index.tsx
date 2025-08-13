@@ -1,7 +1,7 @@
-import FullWebsite from "../components/FullWebsite";
+import FashionCalculator from "../components/FashionCalculator";
 
 const Index = () => {
-  return <FullWebsite />;
+  return <FashionCalculator />;
 };
 
 export default Index;
