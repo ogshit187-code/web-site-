@@ -35,6 +35,19 @@ export default function AnimatedPrintsHero() {
 
   return (
     <section className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Brutalist Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b-4 border-red-500">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-black uppercase">SMOLIN</div>
+            <div className="flex space-x-6">
+              <a href="#calculator" className="text-white hover:text-red-500 font-bold uppercase transition-colors">КАЛЬКУЛЯТОР</a>
+              <a href="/ai-design" className="text-white hover:text-red-500 font-bold uppercase transition-colors">AI ДИЗАЙН</a>
+              <a href="#contacts" className="text-white hover:text-red-500 font-bold uppercase transition-colors">КОНТАКТ</a>
+            </div>
+          </div>
+        </div>
+      </nav>
       {/* Brutalist Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-2 bg-white"></div>
@@ -43,7 +56,7 @@ export default function AnimatedPrintsHero() {
         <div className="absolute bottom-1/4 right-0 w-24 h-24 bg-red-500 transform rotate-12 translate-x-12"></div>
       </div>
 
-      <div className="container mx-auto px-6 h-screen flex items-center justify-center relative z-10">
+      <div className="container mx-auto px-6 h-screen flex items-center justify-center relative z-10 pt-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl w-full">
           
           {/* Left Side - Text */}
