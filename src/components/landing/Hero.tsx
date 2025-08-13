@@ -4,91 +4,87 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   return (
-    <section id="top" aria-label="Главный экран" className="relative min-h-screen bg-white">
-      <div className="relative h-screen">
-        {/* Large Product Image like Celine */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-          {/* Left side - Image */}
-          <div className="relative">
-            <img
-              src={heroImg}
-              alt="SMOLIN ATELIER"
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
+    <section id="top" aria-label="Главный экран" className="pt-16 min-h-screen bg-white animate-fade-in">
+      <div className="container mx-auto px-6 py-20">
+        <div className="grid lg:grid-cols-12 gap-12 items-center min-h-[80vh]">
+          
+          {/* Content - Left side */}
+          <div className="lg:col-span-5 space-y-8 animate-slide-up">
+            {/* Brand category */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-muted rounded-minimal">
+              <div className="w-2 h-2 bg-brand-blue circle"></div>
+              <span className="minimal-heading">Ателье</span>
+            </div>
+            
+            {/* Main heading */}
+            <div className="space-y-4">
+              <h1 className="text-5xl lg:text-6xl font-medium leading-[0.95] tracking-tight">
+                Печать и вышивка 
+                <span className="block text-muted-foreground">на одежде</span>
+              </h1>
+              
+              <p className="text-lg text-muted-foreground max-w-md">
+                Профессиональная DTF печать и машинная вышивка в Санкт-Петербурге. 
+                Качественно и быстро.
+              </p>
+            </div>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="#calculator">
+                <Button className="bg-foreground text-background hover:bg-foreground/90 h-12 px-8 rounded-minimal hover-scale">
+                  Рассчитать стоимость
+                </Button>
+              </a>
+              <a href="#about">
+                <Button variant="outline" className="h-12 px-8 rounded-minimal hover-scale">
+                  Узнать больше
+                </Button>
+              </a>
+            </div>
+            
+            {/* Quick info */}
+            <div className="grid grid-cols-3 gap-6 pt-8 border-t">
+              <div>
+                <div className="text-2xl font-medium">1</div>
+                <div className="minimal-heading">День изготовления</div>
+              </div>
+              <div>
+                <div className="text-2xl font-medium">200₽</div>
+                <div className="minimal-heading">Минимальная цена</div>
+              </div>
+              <div>
+                <div className="text-2xl font-medium">24/7</div>
+                <div className="minimal-heading">Консультации</div>
+              </div>
+            </div>
           </div>
           
-          {/* Right side - Content */}
-          <div className="flex items-center justify-center p-8 lg:p-16 relative">
-            {/* Off-White style background pattern */}
-            <div className="absolute inset-0 off-white-stripes opacity-20"></div>
-            
-            <div className="max-w-lg text-center relative z-10">
-              {/* Off-White style category label */}
-              <div className="mb-8">
-                <span className="font-mono text-xs tracking-[0.3em] text-black/50 border border-black/20 px-3 py-1">
-                  "FASHION ATELIER"
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-2 relative">
-                "SMOLIN
-                <span className="absolute -top-2 -right-6 text-sm font-mono text-black/30">™</span>
-              </h1>
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 relative">
-                ATELIER"
-                <span className="absolute -bottom-2 -right-4 text-xs font-mono text-black/50">
-                  EST. 2024
-                </span>
-              </div>
-              
-              <div className="mb-8 relative">
-                <p className="text-sm font-mono text-black/70 leading-relaxed tracking-[0.1em]">
-                  DTF PRINTING × MACHINE EMBROIDERY
-                </p>
-                <p className="text-sm font-mono text-black/70 leading-relaxed tracking-[0.1em]">
-                  SAINT PETERSBURG, RUSSIA
-                </p>
-                {/* Off-White arrow */}
-                <div className="absolute -right-8 top-1/2 -translate-y-1/2 text-black/20">
-                  <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor">
-                    <path d="M10.5 1L15 5L10.5 9M15 5H1" stroke="currentColor" strokeWidth="1" fill="none"/>
-                  </svg>
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                <a href="#calculator" className="block group relative">
-                  <div className="bg-black text-white py-4 px-8 font-mono text-sm tracking-[0.2em] relative overflow-hidden transition-all duration-300 group-hover:bg-white group-hover:text-black border-2 border-black">
-                    "CALCULATE PRICE"
-                    {/* Off-White diagonal animation */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 text-xs font-mono text-black/30">
-                    01
-                  </div>
-                </a>
+          {/* Visual - Right side */}
+          <div className="lg:col-span-7">
+            <div className="relative">
+              {/* Main image */}
+              <div className="relative overflow-hidden rounded-large shadow-card hover-scale">
+                <img
+                  src={heroImg}
+                  alt="SMOLIN ATELIER - Печать и вышивка на одежде"
+                  className="w-full h-[600px] object-cover"
+                  loading="eager"
+                />
                 
-                {/* Off-White style info */}
-                <div className="border-l-2 border-black pl-4">
-                  <div className="text-xs font-mono text-black/50 uppercase tracking-[0.2em]">
-                    "PRODUCTION TIME"
-                  </div>
-                  <div className="text-sm font-bold tracking-[0.1em]">
-                    1 DAY
-                  </div>
-                </div>
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-            </div>
-            
-            {/* Off-White decorative numbers */}
-            <div className="absolute top-8 right-8 font-mono text-xs text-black/20">
-              001/024
-            </div>
-            <div className="absolute bottom-8 left-8 font-mono text-xs text-black/20 rotate-90">
-              "HERO SECTION"
+              
+              {/* Floating elements */}
+              <div className="absolute -top-4 -left-4 w-20 h-20 bg-brand-green rounded-large animate-fade-in"></div>
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-brand-purple circle animate-fade-in"></div>
+              
+              {/* Pattern background */}
+              <div className="absolute -z-10 top-8 left-8 w-32 h-32 pattern-dots opacity-30"></div>
             </div>
           </div>
+          
         </div>
       </div>
     </section>
