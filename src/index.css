@@ -2,6 +2,228 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== BRUTALIST DESIGN SYSTEM ===== */
+
+:root {
+  /* Brutalist Colors */
+  --brutalist-black: #000000;
+  --brutalist-white: #ffffff;
+  --brutalist-red: #ff0000;
+  --brutalist-gray: #808080;
+  
+  /* Brutalist Fonts */
+  --brutalist-font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Brutalist Base Styles */
+.brutalist-container {
+  background: var(--brutalist-black);
+  color: var(--brutalist-white);
+  font-family: var(--brutalist-font);
+}
+
+.brutalist-text-huge {
+  font-size: clamp(3rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.brutalist-text-big {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brutalist-button {
+  background: var(--brutalist-red);
+  color: var(--brutalist-white);
+  border: 4px solid var(--brutalist-black);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 1rem 2rem;
+  transform: translate(0, 0);
+  box-shadow: 8px 8px 0px var(--brutalist-black);
+  transition: all 0.15s ease;
+}
+
+.brutalist-button:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0px var(--brutalist-black);
+}
+
+.brutalist-button:active {
+  transform: translate(8px, 8px);
+  box-shadow: 0px 0px 0px var(--brutalist-black);
+}
+
+/* Brutalist Geometric Shapes */
+.brutalist-shape {
+  position: absolute;
+  background: var(--brutalist-red);
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+}
+
+.brutalist-square {
+  background: var(--brutalist-white);
+  width: 40px;
+  height: 40px;
+  transform: rotate(45deg);
+}
+
+.brutalist-triangle {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 40px solid var(--brutalist-red);
+}
+
+/* Brutalist Grid Lines */
+.brutalist-grid {
+  position: relative;
+}
+
+.brutalist-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(90deg, transparent 24px, var(--brutalist-red) 25px, var(--brutalist-red) 26px, transparent 27px),
+    linear-gradient(transparent 24px, var(--brutalist-red) 25px, var(--brutalist-red) 26px, transparent 27px);
+  background-size: 25px 25px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Brutalist Text Effects */
+.brutalist-text-shadow {
+  text-shadow: 4px 4px 0px var(--brutalist-red);
+}
+
+.brutalist-text-outline {
+  -webkit-text-stroke: 2px var(--brutalist-black);
+  text-shadow: 
+    4px 4px 0px var(--brutalist-red),
+    8px 8px 0px var(--brutalist-black);
+}
+
+/* Brutalist Animations */
+@keyframes brutalist-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes brutalist-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+@keyframes brutalist-glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+.brutalist-pulse {
+  animation: brutalist-pulse 2s ease-in-out infinite;
+}
+
+.brutalist-shake {
+  animation: brutalist-shake 0.5s ease-in-out infinite;
+}
+
+.brutalist-glitch {
+  animation: brutalist-glitch 0.3s ease-in-out infinite;
+}
+
+/* Brutalist Layout */
+.brutalist-section {
+  background: var(--brutalist-black);
+  color: var(--brutalist-white);
+  border: 4px solid var(--brutalist-white);
+  position: relative;
+}
+
+.brutalist-section::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  background: var(--brutalist-red);
+  z-index: -1;
+}
+
+/* Brutalist Calculator Styles */
+.brutalist-calculator {
+  background: var(--brutalist-white);
+  color: var(--brutalist-black);
+  border: 6px solid var(--brutalist-black);
+  box-shadow: 12px 12px 0px var(--brutalist-red);
+}
+
+.brutalist-input {
+  background: var(--brutalist-white);
+  border: 3px solid var(--brutalist-black);
+  color: var(--brutalist-black);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.brutalist-input:focus {
+  outline: none;
+  border-color: var(--brutalist-red);
+  box-shadow: 0 0 0 3px var(--brutalist-red);
+}
+
+/* Print Animation Effects */
+.print-attach-animation {
+  animation: printAttach 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes printAttach {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2) rotate(-20deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Responsive Brutalist */
+@media (max-width: 768px) {
+  .brutalist-text-huge {
+    font-size: clamp(2rem, 10vw, 4rem);
+  }
+  
+  .brutalist-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .brutalist-calculator {
+    box-shadow: 6px 6px 0px var(--brutalist-red);
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

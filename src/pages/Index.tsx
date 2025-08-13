@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import Hero from "@/components/landing/Hero";
+import AnimatedPrintsHero from "@/components/landing/AnimatedPrintsHero";
 import About from "@/components/landing/About";
 import Services from "@/components/landing/Services";
-import PriceCalculator from "@/components/landing/PriceCalculator";
+import BrutalistCalculator from "@/components/landing/BrutalistCalculator";
 import Process from "@/components/landing/Process";
 import Portfolio from "@/components/landing/Portfolio";
 import Testimonials from "@/components/landing/Testimonials";
@@ -71,11 +71,11 @@ const Index = () => {
 
   return (
     <main>
-      <Hero />
-      <div className="lg:ml-64">
+      <AnimatedPrintsHero />
+      <div>
         <About />
         <Services />
-        <PriceCalculator />
+        <BrutalistCalculator />
         <Process />
         <Portfolio />
         <Testimonials />
