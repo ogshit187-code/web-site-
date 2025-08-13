@@ -1,7 +1,7 @@
-import ModernCalculator from "../components/ModernCalculator";
+import FullWebsite from "../components/FullWebsite";
 
 const Index = () => {
-  return <ModernCalculator />;
+  return <FullWebsite />;
 };
 
 export default Index;
