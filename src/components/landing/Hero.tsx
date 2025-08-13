@@ -1,92 +1,141 @@
 import heroImg from "@/assets/hero-apparel.jpg";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   return (
-    <section id="top" aria-label="Главный экран" className="pt-16 min-h-screen bg-white animate-fade-in">
-      <div className="container mx-auto px-6 py-20">
-        <div className="grid lg:grid-cols-12 gap-12 items-center min-h-[80vh]">
+    <section id="top" className="min-h-screen bg-white relative overflow-hidden">
+      {/* Левое меню как у Celine */}
+      <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-100 z-40 hidden lg:block">
+        <div className="p-8 h-full flex flex-col">
           
-          {/* Content - Left side */}
-          <div className="lg:col-span-5 space-y-8 animate-slide-up">
-            {/* Brand category */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-muted rounded-minimal">
-              <div className="w-2 h-2 bg-brand-blue circle"></div>
-              <span className="minimal-heading">Ателье</span>
-            </div>
-            
-            {/* Main heading */}
-            <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-medium leading-[0.95] tracking-tight">
-                Печать и вышивка 
-                <span className="block text-muted-foreground">на одежде</span>
-              </h1>
-              
-              <p className="text-lg text-muted-foreground max-w-md">
-                Профессиональная DTF печать и машинная вышивка в Санкт-Петербурге. 
-                Качественно и быстро.
-              </p>
-            </div>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a href="#calculator">
-                <Button className="bg-foreground text-background hover:bg-foreground/90 h-12 px-8 rounded-minimal hover-scale">
-                  Рассчитать стоимость
-                </Button>
-              </a>
-              <a href="#about">
-                <Button variant="outline" className="h-12 px-8 rounded-minimal hover-scale">
-                  Узнать больше
-                </Button>
-              </a>
-            </div>
-            
-            {/* Quick info */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t">
-              <div>
-                <div className="text-2xl font-medium">1</div>
-                <div className="minimal-heading">День изготовления</div>
-              </div>
-              <div>
-                <div className="text-2xl font-medium">200₽</div>
-                <div className="minimal-heading">Минимальная цена</div>
-              </div>
-              <div>
-                <div className="text-2xl font-medium">24/7</div>
-                <div className="minimal-heading">Консультации</div>
+          {/* Меню категорий */}
+          <nav className="space-y-6 flex-1">
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium tracking-wider uppercase">SMOLIN SHOWS</h3>
+              <div className="space-y-2 text-sm">
+                <a href="#new" className="block hover:underline">SMOLIN NEW</a>
+                <a href="#gifts" className="block hover:underline">SMOLIN GIFTS</a>
               </div>
             </div>
-          </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium tracking-wider uppercase">SMOLIN SHOP WOMEN</h3>
+              <div className="space-y-2 text-sm">
+                <a href="#tshirts" className="block hover:underline">ФУТБОЛКИ</a>
+                <a href="#hoodies" className="block hover:underline">ХУДИ И СВИТШОТЫ</a>
+                <a href="#custom" className="block hover:underline">КАСТОМ ДИЗАЙН</a>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium tracking-wider uppercase">SMOLIN SHOP MEN</h3>
+              <div className="space-y-2 text-sm">
+                <a href="#tshirts-men" className="block hover:underline">ФУТБОЛКИ</a>
+                <a href="#hoodies-men" className="block hover:underline">ХУДИ И СВИТШОТЫ</a>
+                <a href="#business" className="block hover:underline">КОРПОРАТИВНАЯ ОДЕЖДА</a>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium tracking-wider uppercase">SMOLIN SERVICES</h3>
+              <div className="space-y-2 text-sm">
+                <a href="#dtf" className="block hover:underline">DTF ПЕЧАТЬ</a>
+                <a href="#embroidery" className="block hover:underline">МАШИННАЯ ВЫШИВКА</a>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium tracking-wider uppercase">AI DESIGNER</h3>
+              <div className="space-y-2 text-sm">
+                <a href="/ai-design" className="block hover:underline">СОЗДАТЬ ПРИНТ</a>
+              </div>
+            </div>
+          </nav>
           
-          {/* Visual - Right side */}
-          <div className="lg:col-span-7">
-            <div className="relative">
-              {/* Main image */}
-              <div className="relative overflow-hidden rounded-large shadow-card hover-scale">
-                <img
-                  src={heroImg}
-                  alt="SMOLIN ATELIER - Печать и вышивка на одежде"
-                  className="w-full h-[600px] object-cover"
-                  loading="eager"
-                />
-                
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-4 -left-4 w-20 h-20 bg-brand-green rounded-large animate-fade-in"></div>
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-brand-purple circle animate-fade-in"></div>
-              
-              {/* Pattern background */}
-              <div className="absolute -z-10 top-8 left-8 w-32 h-32 pattern-dots opacity-30"></div>
+          {/* Нижние ссылки */}
+          <div className="space-y-4 text-sm">
+            <div className="space-y-2">
+              <a href="#calculator" className="block hover:underline">КАЛЬКУЛЯТОР</a>
+              <a href="#contact" className="block hover:underline">КОНТАКТЫ</a>
+            </div>
+            
+            <div className="space-y-2 text-xs">
+              <a href="#search" className="block hover:underline">ПОИСК 🔍</a>
             </div>
           </div>
           
         </div>
       </div>
+
+      {/* Верхний хедер как у Celine */}
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+        <div className="lg:ml-64">
+          <div className="flex items-center justify-between px-8 py-4">
+            
+            {/* Центральное сообщение */}
+            <div className="flex-1 text-center">
+              <p className="text-sm tracking-wider">
+                ПЕЧАТЬ DTF И МАШИННАЯ ВЫШИВКА В САНКТ-ПЕТЕРБУРГЕ — СРОК ИЗГОТОВЛЕНИЯ 1 ДЕНЬ.{" "}
+                <a href="#calculator" className="underline font-medium">
+                  РАССЧИТАТЬ ЗАКАЗ
+                </a>
+              </p>
+            </div>
+            
+            {/* Кнопка закрытия */}
+            <button className="text-sm tracking-wider hover:underline">
+              CLOSE
+            </button>
+            
+          </div>
+        </div>
+      </header>
+
+      {/* Основной контент со сдвигом */}
+      <div className="lg:ml-64 pt-20">
+        <div className="min-h-screen flex items-center justify-center">
+          
+          {/* Центральная область с изображением */}
+          <div className="w-full max-w-6xl mx-auto px-8">
+            
+            {/* Главное изображение */}
+            <div className="relative group cursor-pointer">
+              <img 
+                src={heroImg} 
+                alt="SMOLIN ATELIER" 
+                className="w-full h-[70vh] object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Overlay с текстом */}
+              <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-16">
+                <div className="text-center text-white">
+                  <h1 className="text-4xl md:text-6xl lg:text-8xl font-light tracking-wider mb-4">
+                    SUMMER SERIES
+                  </h1>
+                  <a 
+                    href="#calculator"
+                    className="inline-block text-sm tracking-widest border border-white px-8 py-3 hover:bg-white hover:text-black transition-colors duration-300"
+                  >
+                    РАССЧИТАТЬ СТОИМОСТЬ
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+
+      {/* Мобильное меню */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50">
+        <div className="grid grid-cols-4 gap-1 p-4">
+          <a href="#new" className="text-center py-2 text-xs tracking-wider">NEW</a>
+          <a href="#calculator" className="text-center py-2 text-xs tracking-wider">КАЛЬКУЛЯТОР</a>
+          <a href="/ai-design" className="text-center py-2 text-xs tracking-wider">AI ДИЗАЙН</a>
+          <a href="#contact" className="text-center py-2 text-xs tracking-wider">КОНТАКТ</a>
+        </div>
+      </div>
+      
     </section>
   );
 }

@@ -450,7 +450,8 @@ export default function PriceCalculator() {
 
   return (
     <section id="calculator" className="py-24 bg-white">
-      <div className="container mx-auto px-6">
+      <div className="lg:ml-64">
+        <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-4 mb-6">
@@ -732,6 +733,7 @@ export default function PriceCalculator() {
             </div>
 
           </div>
+        </div>
         </div>
       </div>
     </section>

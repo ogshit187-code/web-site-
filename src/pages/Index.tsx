@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import About from "@/components/landing/About";
 import Services from "@/components/landing/Services";
@@ -72,7 +71,6 @@ const Index = () => {
 
   return (
     <main>
-      <Navbar />
       <Hero />
       <About />
       <Services />
