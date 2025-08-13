@@ -159,4 +159,47 @@ All colors MUST be HSL.
     transform: translate3d(0, 0, 0);
     transition: transform 0.6s ease-out;
   }
+  
+  /* Off-White inspired styles */
+  .off-white-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0, 0, 0, 0.05) 10px,
+      rgba(0, 0, 0, 0.05) 20px
+    );
+  }
+  
+  .off-white-quote::before {
+    content: '"';
+    position: absolute;
+    left: -12px;
+    top: 0;
+    font-size: 1.2em;
+    opacity: 0.3;
+  }
+  
+  .off-white-quote::after {
+    content: '"';
+    position: absolute;
+    right: -12px;
+    top: 0;
+    font-size: 1.2em;
+    opacity: 0.3;
+  }
+  
+  .off-white-arrow {
+    position: relative;
+  }
+  
+  .off-white-arrow::after {
+    content: '→';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.3;
+    font-size: 0.8em;
+  }
 }
