@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,8 @@ import {
   Eye,
   Edit,
   Trash2,
-  Plus
+  Plus,
+  Upload
 } from "lucide-react";
 
 interface Order {
@@ -85,6 +86,23 @@ export default function Admin() {
     description: ""
   });
 
+  // Контент сайта
+  const [siteContent, setSiteContent] = useState({
+    heroTitle: "SUMMER SERIES",
+    heroSubtitle: "ПЕЧАТЬ DTF И МАШИННАЯ ВЫШИВКА В САНКТ-ПЕТЕРБУРГЕ — СРОК ИЗГОТОВЛЕНИЯ 1 ДЕНЬ.",
+    aboutTitle: "Что мы делаем",
+    aboutDescription: "Профессиональная печать и вышивка на одежде",
+    servicesTitle: "Услуги и цены",
+    calculatorTitle: "Рассчитайте стоимость"
+  });
+
+  // Медиа файлы
+  const [mediaFiles, setMediaFiles] = useState([
+    { id: "1", name: "hero-image.jpg", url: "/images/hero-apparel.jpg", type: "image", usage: "Главное изображение" },
+    { id: "2", name: "portfolio-1.jpg", url: "/images/portfolio-1.jpg", type: "image", usage: "Портфолио" },
+    { id: "3", name: "portfolio-2.jpg", url: "/images/portfolio-2.jpg", type: "image", usage: "Портфолио" }
+  ]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Простая проверка (в реальном проекте нужна серверная авторизация)
@@ -124,6 +142,38 @@ export default function Admin() {
   const deleteProduct = (id: string) => {
     if (confirm("Удалить товар?")) {
       setProducts(products.filter(p => p.id !== id));
+    }
+  };
+
+  // Функции для работы с контентом
+  const saveContent = () => {
+    try {
+      localStorage.setItem('smolin-site-content', JSON.stringify(siteContent));
+      alert('Контент сохранен успешно!');
+    } catch (error) {
+      alert('Ошибка при сохранении контента');
+    }
+  };
+
+  const loadContent = () => {
+    try {
+      const savedContent = localStorage.getItem('smolin-site-content');
+      if (savedContent) {
+        setSiteContent(JSON.parse(savedContent));
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке контента:', error);
+    }
+  };
+
+  // Загружаем сохраненный контент при инициализации
+  React.useEffect(() => {
+    loadContent();
+  }, []);
+
+  const deleteMediaFile = (id: string) => {
+    if (confirm("Удалить файл?")) {
+      setMediaFiles(mediaFiles.filter(f => f.id !== id));
     }
   };
 
@@ -194,7 +244,7 @@ export default function Admin() {
 
       <div className="container mx-auto px-6 py-8">
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="orders" className="flex items-center gap-2">
               <ShoppingCart className="w-4 h-4" />
               Заказы
@@ -202,6 +252,14 @@ export default function Admin() {
             <TabsTrigger value="products" className="flex items-center gap-2">
               <Image className="w-4 h-4" />
               Товары
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center gap-2">
+              <Edit className="w-4 h-4" />
+              Контент
+            </TabsTrigger>
+            <TabsTrigger value="media" className="flex items-center gap-2">
+              <Image className="w-4 h-4" />
+              Медиа
             </TabsTrigger>
             <TabsTrigger value="customers" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
@@ -332,6 +390,164 @@ export default function Admin() {
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => deleteProduct(product.id)}>
                             <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Управление контентом */}
+          <TabsContent value="content">
+            <Card>
+              <CardHeader>
+                <CardTitle>Управление контентом сайта</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-6">
+                  
+                  {/* Главная страница */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Главная страница</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium">Заголовок Hero</label>
+                        <Input 
+                          value={siteContent.heroTitle}
+                          onChange={(e) => setSiteContent({...siteContent, heroTitle: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Подзаголовок Hero</label>
+                        <Textarea 
+                          value={siteContent.heroSubtitle}
+                          onChange={(e) => setSiteContent({...siteContent, heroSubtitle: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Раздел "О нас" */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Раздел "О нас"</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium">Заголовок</label>
+                        <Input 
+                          value={siteContent.aboutTitle}
+                          onChange={(e) => setSiteContent({...siteContent, aboutTitle: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Описание</label>
+                        <Textarea 
+                          value={siteContent.aboutDescription}
+                          onChange={(e) => setSiteContent({...siteContent, aboutDescription: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Раздел "Услуги" */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Раздел "Услуги"</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium">Заголовок услуг</label>
+                        <Input 
+                          value={siteContent.servicesTitle}
+                          onChange={(e) => setSiteContent({...siteContent, servicesTitle: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Заголовок калькулятора</label>
+                        <Input 
+                          value={siteContent.calculatorTitle}
+                          onChange={(e) => setSiteContent({...siteContent, calculatorTitle: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <Button variant="outline">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Предпросмотр
+                    </Button>
+                    <Button onClick={saveContent}>
+                      Сохранить изменения
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Управление медиа */}
+          <TabsContent value="media">
+            <div className="grid gap-6">
+              
+              {/* Загрузка файлов */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Загрузка изображений</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
+                    <div className="space-y-4">
+                      <div className="w-16 h-16 bg-muted rounded-lg mx-auto flex items-center justify-center">
+                        <Upload className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Загрузите изображения</h3>
+                        <p className="text-sm text-muted-foreground">Поддерживаются JPG, PNG, WebP до 5MB</p>
+                      </div>
+                      <Button>
+                        Выбрать файлы
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Список медиа файлов */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Медиа библиотека</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {mediaFiles.map((file) => (
+                      <div key={file.id} className="border rounded-lg p-3 space-y-2">
+                        <img 
+                          src={file.url} 
+                          alt={file.name}
+                          className="w-full h-24 object-cover rounded"
+                        />
+                        <div>
+                          <p className="text-sm font-medium truncate">{file.name}</p>
+                          <p className="text-xs text-muted-foreground">{file.usage}</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button variant="outline" size="sm" className="flex-1">
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => deleteMediaFile(file.id)}
+                          >
+                            <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
                       </div>

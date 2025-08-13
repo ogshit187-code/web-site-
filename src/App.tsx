@@ -8,25 +8,28 @@ import Admin from "./pages/Admin";
 import AIDesign from "./pages/AIDesign";
 import NotFound from "./pages/NotFound";
 import { ClientTypeProvider } from "./contexts/ClientTypeContext";
+import { ContentProvider } from "./contexts/ContentContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ClientTypeProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/ai-design" element={<AIDesign />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </ClientTypeProvider>
+      <ContentProvider>
+        <ClientTypeProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/ai-design" element={<AIDesign />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </ClientTypeProvider>
+      </ContentProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

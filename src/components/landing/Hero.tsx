@@ -1,6 +1,8 @@
 import heroImg from "@/assets/hero-apparel.jpg";
+import { useContent } from "@/contexts/ContentContext";
 
 export default function Hero() {
+  const { content } = useContent();
   return (
     <section id="top" className="min-h-screen bg-white relative overflow-hidden">
       {/* Левое меню как у Celine */}
@@ -74,7 +76,7 @@ export default function Hero() {
             {/* Центральное сообщение */}
             <div className="flex-1 text-center">
               <p className="text-sm tracking-wider">
-                ПЕЧАТЬ DTF И МАШИННАЯ ВЫШИВКА В САНКТ-ПЕТЕРБУРГЕ — СРОК ИЗГОТОВЛЕНИЯ 1 ДЕНЬ.{" "}
+                {content.heroSubtitle}{" "}
                 <a href="#calculator" className="underline font-medium">
                   РАССЧИТАТЬ ЗАКАЗ
                 </a>
@@ -109,7 +111,7 @@ export default function Hero() {
               <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-16">
                 <div className="text-center text-white">
                   <h1 className="text-4xl md:text-6xl lg:text-8xl font-light tracking-wider mb-4">
-                    SUMMER SERIES
+                    {content.heroTitle}
                   </h1>
                   <a 
                     href="#calculator"
