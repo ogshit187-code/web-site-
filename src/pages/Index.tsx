@@ -70,20 +70,23 @@ const Index = () => {
   // }
 
   return (
-    <main>
-      <SimpleTestHero />
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#ff0000',
+      color: '#ffffff',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '48px',
+      fontWeight: 'bold',
+      textAlign: 'center'
+    }}>
       <div>
-        <About />
-        <Services />
-        <BrutalistCalculator />
-        <Process />
-        <Portfolio />
-        <Testimonials />
-        <Contact />
+        <h1>ТЕСТ УСПЕШЕН!</h1>
+        <p>Дизайн обновляется!</p>
+        <p>Время: {new Date().toLocaleTimeString()}</p>
       </div>
-      <Footer />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-    </main>
+    </div>
   );
 };
 
