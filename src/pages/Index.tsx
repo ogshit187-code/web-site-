@@ -65,9 +65,9 @@ const Index = () => {
   };
 
   // Показываем селектор типа клиента, если не выбран
-  if (!clientType) {
-    return <ClientTypeSelector onSelect={setClientType} />;
-  }
+  // if (!clientType) {
+  //   return <ClientTypeSelector onSelect={setClientType} />;
+  // }
 
   return (
     <main>
