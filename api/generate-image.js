@@ -14,35 +14,43 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ========== DEMO MODE (раскомментируйте для реальной генерации) ==========
+    // ========== REAL OPENAI GENERATION ==========
     
-    // import OpenAI from 'openai';
-    // const openai = new OpenAI({
-    //   apiKey: process.env.OPENAI_API_KEY,
-    // });
+    const { OpenAI } = await import('openai');
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
     
-    // const response = await openai.images.generate({
-    //   model: "dall-e-3",
-    //   prompt: `${prompt} in ${style} style`,
-    //   size: size,
-    //   quality: quality,
-    //   n: 1,
-    // });
+    // Улучшенный промпт для fashion дизайна
+    const enhancedPrompt = `${prompt}. ${style ? `Style: ${style}.` : ''} Professional fashion website design, luxury aesthetic, clean minimalist layout, high-end fashion brand quality, sophisticated typography, premium materials, elegant composition`;
     
-    // res.status(200).json({
-    //   success: true,
-    //   data: {
-    //     url: response.data[0].url,
-    //     prompt: prompt,
-    //     style: style,
-    //     created: response.created
-    //   }
-    // });
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: enhancedPrompt,
+      size: size,
+      quality: quality,
+      n: 1,
+    });
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        url: response.data[0].url,
+        prompt: enhancedPrompt,
+        style: style,
+        created: response.created
+      }
+    });
 
-    // ========== MOCK MODE (для демо без затрат на API) ==========
+    // ========== FALLBACK TO MOCK MODE IF API FAILS ==========
+
+  } catch (error) {
+    console.error('OpenAI API Error:', error);
     
-    // Симуляция времени генерации
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Fallback to mock mode if OpenAI fails
+    console.log('Falling back to mock mode...');
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const mockImageUrl = `https://picsum.photos/1024/1024?random=${Date.now()}`;
     
@@ -52,15 +60,10 @@ export default async function handler(req, res) {
         url: mockImageUrl,
         prompt: prompt,
         style: style,
-        created: Math.floor(Date.now() / 1000)
+        created: Math.floor(Date.now() / 1000),
+        fallback: true,
+        error: 'OpenAI API unavailable, using placeholder image'
       }
-    });
-
-  } catch (error) {
-    console.error('Error generating image:', error);
-    res.status(500).json({ 
-      error: 'Failed to generate image',
-      details: error.message 
     });
   }
 }

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import AIDesign from "./pages/AIDesign";
+import TestGeneration from "./pages/TestGeneration";
 import NotFound from "./pages/NotFound";
 import { ClientTypeProvider } from "./contexts/ClientTypeContext";
 import { ContentProvider } from "./contexts/ContentContext";
@@ -24,6 +25,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/ai-design" element={<AIDesign />} />
+              <Route path="/test-generation" element={<TestGeneration />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
