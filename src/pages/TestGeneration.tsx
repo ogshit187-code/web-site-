@@ -193,14 +193,30 @@ export default function TestGeneration() {
           fontSize: '14px',
           color: '#666666'
         }}>
-          <h4 style={{ color: '#333333', marginBottom: '16px' }}>🔧 Troubleshooting MCP OpenAI:</h4>
+          <h4 style={{ color: '#333333', marginBottom: '16px' }}>🔧 OpenRouter Setup:</h4>
           <ul style={{ paddingLeft: '20px', lineHeight: '1.6' }}>
-            <li>Set your OpenAI API key: <code>export OPENAI_API_KEY="sk-..."</code></li>
-            <li>Make sure you have billing set up on OpenAI</li>
-            <li>Check that MCP server is running with Node.js 18+</li>
-            <li>Verify access to GPT-Image-1 model</li>
-            <li>Try restarting your MCP client</li>
+            <li>Set your OpenRouter API key: <code>export OPENROUTER_API_KEY="sk-or-v1-..."</code></li>
+            <li>Get your key from <a href="https://openrouter.ai/keys" target="_blank" style={{color: '#007bff'}}>openrouter.ai/keys</a></li>
+            <li>Add credits to your OpenRouter account</li>
+            <li>Model used: <code>openai/dall-e-3</code></li>
+            <li>For Vercel: Add <code>OPENROUTER_API_KEY</code> in Environment Variables</li>
           </ul>
+          
+          <div style={{
+            marginTop: '16px',
+            padding: '12px',
+            backgroundColor: '#E3F2FD',
+            borderRadius: '4px',
+            border: '1px solid #BBDEFB'
+          }}>
+            <strong>💡 Преимущества OpenRouter:</strong>
+            <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
+              <li>Доступ к множеству AI моделей</li>
+              <li>Конкурентные цены</li>
+              <li>Простая интеграция</li>
+              <li>Надежная работа</li>
+            </ul>
+          </div>
         </div>
 
         <div style={{

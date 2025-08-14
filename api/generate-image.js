@@ -14,18 +14,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ========== REAL OPENAI GENERATION ==========
+    // ========== OPENROUTER GENERATION ==========
     
     const { OpenAI } = await import('openai');
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.OPENROUTER_API_KEY,
+      baseURL: "https://openrouter.ai/api/v1",
+      defaultHeaders: {
+        "HTTP-Referer": "https://print-stitch-studio.vercel.app",
+        "X-Title": "Print Stitch Studio"
+      }
     });
     
     // Улучшенный промпт для fashion дизайна
     const enhancedPrompt = `${prompt}. ${style ? `Style: ${style}.` : ''} Professional fashion website design, luxury aesthetic, clean minimalist layout, high-end fashion brand quality, sophisticated typography, premium materials, elegant composition`;
     
     const response = await openai.images.generate({
-      model: "dall-e-3",
+      model: "openai/dall-e-3",
       prompt: enhancedPrompt,
       size: size,
       quality: quality,
@@ -38,7 +43,7 @@ export default async function handler(req, res) {
         url: response.data[0].url,
         prompt: enhancedPrompt,
         style: style,
-        created: response.created
+        created: response.created || Math.floor(Date.now() / 1000)
       }
     });
 
